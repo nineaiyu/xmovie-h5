@@ -1,0 +1,113 @@
+{
+  "name": "xmovie-h5",
+  "version": "1.5.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "serve": "pnpm dev",
+    "build": "rimraf dist && vite build",
+    "build:staging": "rimraf dist && vite build --mode staging",
+    "report": "rimraf dist && vite build",
+    "preview": "vite preview",
+    "preview:build": "pnpm build && vite preview",
+    "typecheck": "tsc --noEmit && vue-tsc --noEmit --skipLibCheck",
+    "clean:cache": "rimraf .eslintcache && rimraf node_modules && pnpm install",
+    "lint:eslint": "eslint --cache --max-warnings 0  \"{src,mock,build}/**/*.{vue,js,ts,tsx}\" --fix",
+    "lint:prettier": "prettier --write  \"src/**/*.{js,ts,json,tsx,css,scss,vue,html,md}\"",
+    "lint:stylelint": "stylelint --cache --fix \"**/*.{html,vue,css,scss}\" --cache --cache-location node_modules/.cache/stylelint/",
+    "lint": "pnpm lint:eslint && pnpm lint:prettier && pnpm lint:stylelint",
+    "prepare": "husky install",
+    "preinstall": "npx only-allow pnpm"
+  },
+  "keywords": [
+    "tailwindcss",
+    "typescript",
+    "pinia",
+    "vite5",
+    "vant4",
+    "vue3",
+    "esm"
+  ],
+  "homepage": "https://github.com/nineaiyu/xmovie",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nineaiyu/xmovie.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nineaiyu/xmovie/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "isummer",
+    "email": "ly_1301b@163.com",
+    "url": "https://github.com/nineaiyu/"
+  },
+  "dependencies": {
+    "axios": "^1.6.2",
+    "js-cookie": "^3.0.5",
+    "normalize.css": "^8.0.1",
+    "nprogress": "^0.2.0",
+    "pinia": "^2.1.7",
+    "vant": "^4.7.3",
+    "vue": "^3.3.8",
+    "vue-router": "^4.2.5"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^18.4.2",
+    "@commitlint/config-conventional": "^18.4.2",
+    "@commitlint/types": "^18.4.0",
+    "@eslint/js": "^8.53.0",
+    "@rushstack/eslint-patch": "^1.6.0",
+    "@types/js-cookie": "^3.0.6",
+    "@types/node": "^20.10.0",
+    "@types/nprogress": "^0.2.3",
+    "@typescript-eslint/eslint-plugin": "^6.11.0",
+    "@typescript-eslint/parser": "^6.11.0",
+    "@vitejs/plugin-vue": "^4.5.0",
+    "@vitejs/plugin-vue-jsx": "^3.1.0",
+    "@vue/tsconfig": "^0.4.0",
+    "autoprefixer": "^10.4.16",
+    "cnjm-postcss-px-to-viewport": "^1.0.0",
+    "commitlint": "^18.4.3",
+    "eslint": "^8.54.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-define-config": "^1.24.1",
+    "eslint-plugin-prettier": "^5.0.1",
+    "eslint-plugin-vue": "^9.18.1",
+    "husky": "^8.0.3",
+    "less": "^4.2.0",
+    "postcss": "^8.4.31",
+    "prettier": "^3.1.0",
+    "rimraf": "^5.0.5",
+    "standard-version": "^9.5.0",
+    "stylelint": "^15.11.0",
+    "stylelint-config-recess-order": "^4.3.0",
+    "stylelint-config-recommended-vue": "^1.5.0",
+    "stylelint-config-standard-scss": "^11.1.0",
+    "stylelint-prettier": "^4.0.2",
+    "tailwindcss": "^3.3.5",
+    "typescript": "^5.2.2",
+    "unplugin-vue-components": "^0.25.2",
+    "vite": "^5.0.3",
+    "vite-plugin-compression": "^0.5.1",
+    "vite-plugin-fake-server": "^2.0.0",
+    "vite-plugin-remove-console": "^2.1.1",
+    "vite-plugin-svg-icons": "^2.0.1",
+    "vite-plugin-vue-setup-extend": "^0.4.0",
+    "vue-eslint-parser": "^9.3.2",
+    "vue-tsc": "^1.8.22"
+  },
+  "engines": {
+    "node": "^18.0.0 || >=20.0.0",
+    "pnpm": ">=8.6.10"
+  },
+  "packageManager": "pnpm@8.6.10",
+  "pnpm": {
+    "allowedDeprecatedVersions": {
+      "sourcemap-codec": "*",
+      "w3c-hr-time": "*",
+      "stable": "*"
+    }
+  }
+}
