@@ -8,6 +8,8 @@ import "./styles/index.less";
 import "./styles/tailwind.css";
 // svg icon
 import "virtual:svg-icons-register";
+// 2. 引入组件样式
+import "vant/lib/index.css";
 
 import App from "./App.vue";
 import router from "./router";

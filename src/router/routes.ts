@@ -1,36 +1,84 @@
 import Layout from "@/layout/index.vue";
 import type { RouteRecordRaw } from "vue-router";
-import Demo from "@/views/demo/index.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
     name: "root",
     component: Layout,
-    redirect: { name: "Demo" },
+    redirect: { name: "Home" },
     children: [
       {
-        path: "demo",
-        name: "Demo",
-        component: Demo,
+        path: "home",
+        name: "Home",
+        component: () => import("@/views/home/index.vue"),
         meta: {
           title: "主页"
         }
       },
       {
-        path: "tools",
-        name: "Tools",
-        component: () => import("@/views/tools/index.vue"),
+        path: "film",
+        name: "Film",
+        component: () => import("@/views/film/index.vue"),
         meta: {
-          title: "工具"
+          title: "影视"
         }
       },
       {
-        path: "about",
-        name: "About",
-        component: () => import("@/views/about/index.vue"),
+        path: "detail/:pk",
+        name: "Detail",
+        component: () => import("@/views/detail/index.vue"),
         meta: {
-          title: "关于",
+          title: "详情"
+        }
+      },
+      {
+        path: "actor/:pk",
+        name: "Actor",
+        component: () => import("@/views/actor/index.vue"),
+        meta: {
+          title: "演员"
+        }
+      },
+      {
+        path: "history",
+        name: "History",
+        component: () => import("@/views/history/index.vue"),
+        meta: {
+          title: "历史"
+        }
+      },
+      {
+        path: "login",
+        name: "Login",
+        component: () => import("@/views/login/index.vue"),
+        meta: {
+          title: "登录"
+        }
+      },
+      {
+        path: "register",
+        name: "Register",
+        component: () => import("@/views/register/index.vue"),
+        meta: {
+          title: "注册"
+        }
+      },
+      {
+        path: "user",
+        name: "User",
+        component: () => import("@/views/user/index.vue"),
+        meta: {
+          title: "我的",
+          noCache: true
+        }
+      },
+      {
+        path: "/:pathMatch(.*)",
+        name: "Err404",
+        component: () => import("@/views/error/404.vue"),
+        meta: {
+          title: "404",
           noCache: true
         }
       }
