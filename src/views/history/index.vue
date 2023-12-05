@@ -82,7 +82,7 @@ const goDetail = (pk: string) => {
   });
 };
 
-const confirmDelete = () => {
+const confirmClean = () => {
   showConfirmDialog({
     title: "警告",
     message: "确定要清空所有播放历史记录么？"
@@ -99,39 +99,21 @@ const confirmDelete = () => {
   });
 };
 
-let timeOutEvent = null;
-let clickFlag = true;
-const goTouchstart = (pk: string) => {
-  clearTimeout(timeOutEvent);
-  timeOutEvent = setTimeout(() => {
-    clickFlag = false;
-    showConfirmDialog({
-      title: "警告",
-      message: "确定要删除该播放历史记录么？"
-    })
-      .then(() => {
-        deleteWatchHistoryApi(pk).then(res => {
-          if (res.code === 1000) {
-            showNotify({ type: "success", message: "操作成功" });
-            refreshing.value = true;
-            onLoad();
-          } else {
-            showNotify({ type: "danger", message: res.detail });
-          }
-          clickFlag = true;
-        });
-      })
-      .catch(() => {
-        clickFlag = true;
-      });
-  }, 600);
-};
-//手如果在600毫秒内就释放，则取消长按事件
-const goTouchend = (pk: string) => {
-  clearTimeout(timeOutEvent);
-  if (clickFlag) {
-    goDetail(pk);
-  }
+const confirmDelete = (pk: string) => {
+  showConfirmDialog({
+    title: "警告",
+    message: "确定要删除该播放历史记录么？"
+  }).then(() => {
+    deleteWatchHistoryApi(pk).then(res => {
+      if (res.code === 1000) {
+        showNotify({ type: "success", message: "操作成功" });
+        refreshing.value = true;
+        onLoad();
+      } else {
+        showNotify({ type: "danger", message: res.detail });
+      }
+    });
+  });
 };
 </script>
 
@@ -145,7 +127,7 @@ const goTouchend = (pk: string) => {
       @search="onSearch"
     >
       <template #action>
-        <span class="text-red-400" @click="confirmDelete">清空</span>
+        <span class="text-red-400" @click="confirmClean">清空</span>
       </template>
     </van-search>
   </van-cell>
@@ -162,45 +144,61 @@ const goTouchend = (pk: string) => {
     >
       <van-cell>
         <van-grid :gutter="10" :column-num="1">
-          <van-grid-item
-            v-for="item in Result"
-            :key="item.pk"
-            @touchstart.prevent="goTouchstart(item.pk)"
-            @touchend.prevent="goTouchend(item.film.pk)"
-          >
-            <van-row class="text-left">
-              <van-col :span="6">
-                <van-image :src="item.film.poster" fit="cover" :radius="6" />
-              </van-col>
-              <van-col :span="16" offset="1">
-                <span class="font-bold">{{ item.film.name }}</span>
-                <div class="font-thin">{{ item.episode.name }}</div>
-                <div>
-                  已经观看 {{ formatVideoTimes(item.times) }}，总共
-                  {{ formatVideoTimes(item.episode.times) }}
-                </div>
-                <van-col>
-                  <span
-                    >观看时间
-                    {{
-                      dayjs(item.updated_time).format("YYYY-MM-DD HH:mm:ss")
-                    }}</span
-                  >
+          <van-swipe-cell v-for="item in Result" :key="item.pk">
+            <template #right>
+              <van-space direction="vertical" fill>
+                <van-button
+                  type="danger"
+                  plain
+                  block
+                  @click="confirmDelete(item.pk)"
+                  >删除</van-button
+                >
+                <van-button type="primary" block @click="goDetail(item.film.pk)"
+                  >观看</van-button
+                >
+              </van-space>
+            </template>
+            <van-grid-item>
+              <van-row class="text-left">
+                <van-col :span="6" @click="goDetail(item.film.pk)">
+                  <van-image :src="item.film.poster" fit="cover" :radius="6" />
                 </van-col>
-              </van-col>
-              <van-col :span="24" class="w-full mt-2">
-                <van-progress
-                  class="w-full"
-                  :percentage="
-                    Math.floor((item.times * 100) / item.episode.times)
-                  "
-                  stroke-width="6"
-                />
-              </van-col>
-            </van-row>
-          </van-grid-item>
+                <van-col :span="16" offset="1">
+                  <span class="font-bold">{{ item.film.name }}</span>
+                  <div class="font-thin">{{ item.episode.name }}</div>
+                  <div>
+                    已经观看 {{ formatVideoTimes(item.times) }}，总共
+                    {{ formatVideoTimes(item.episode.times) }}
+                  </div>
+                  <van-col>
+                    <span
+                      >观看时间
+                      {{
+                        dayjs(item.updated_time).format("YYYY-MM-DD HH:mm:ss")
+                      }}</span
+                    >
+                  </van-col>
+                </van-col>
+                <van-col :span="24" class="w-full mt-2">
+                  <van-progress
+                    class="w-full"
+                    :percentage="
+                      Math.floor((item.times * 100) / item.episode.times)
+                    "
+                    stroke-width="6"
+                  />
+                </van-col>
+              </van-row>
+            </van-grid-item>
+          </van-swipe-cell>
         </van-grid>
       </van-cell>
     </van-list>
   </van-pull-refresh>
 </template>
+<style scoped>
+.van-button {
+  height: 9vh;
+}
+</style>
