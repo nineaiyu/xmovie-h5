@@ -1,8 +1,12 @@
 <template>
-  <!--  <van-watermark content="合合交友" />-->
   <van-space direction="vertical" class="text-center mt-5 w-full" :size="20">
     <van-image round width="10rem" height="10rem" :src="logo" />
-    <h2>爱看影院</h2>
+    <h2 @click="useToggleDarkMode">
+      爱看影院<svg-icon
+        class="text-[18px]"
+        :name="useDarkMode() ? 'light' : 'dark'"
+      />
+    </h2>
     <van-form @submit="handleLogin">
       <van-cell-group inset>
         <van-field
@@ -58,6 +62,7 @@ import logo from "@/assets/20231203133640.png";
 import { getTempTokenApi } from "@/api/system/auth";
 import ReImageVerify from "@/components/ImageVerify/src/index.vue";
 import "vant/es/notify/style";
+import { useDarkMode, useToggleDarkMode } from "@/hooks/useToggleDarkMode";
 const loginForm = reactive({
   username: "",
   password: "",

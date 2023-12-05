@@ -8,18 +8,6 @@ export const getWatchHistoryListApi = (data?: object) => {
   });
 };
 
-export const createWatchHistoryApi = (data?: object) => {
-  return http.request<Result>("post", "/api/movies/h5/history", {
-    data: data
-  });
-};
-
-export const updateWatchHistoryApi = (pk?: string, data?: object) => {
-  return http.request<Result>("put", `/api/movies/h5/history/${pk}`, {
-    data: data
-  });
-};
-
 export const deleteWatchHistoryApi = (pk?: string) => {
   return http.request<Result>("delete", `/api/movies/h5/history/${pk}`);
 };
@@ -32,6 +20,12 @@ export const manyDeleteWatchHistoryApi = (data?: object) => {
 
 export const updateWatchHistoryTimesApi = (data?: object) => {
   return http.request<Result>("post", "/api/movies/h5/history/times", {
+    data: data
+  });
+};
+
+export const cleanWatchHistoryApi = (data?: object) => {
+  return http.request<Result>("post", "/api/movies/h5/history/clean", {
     data: data
   });
 };

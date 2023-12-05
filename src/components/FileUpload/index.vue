@@ -4,11 +4,11 @@
       <img ref="imgElRef" src="" alt="" />
       <van-tabbar>
         <van-tabbar-item name="rotate" @click="handCropper('rotate', 90)"
-          >旋转</van-tabbar-item
-        >
+          >旋转
+        </van-tabbar-item>
         <van-tabbar-item name="search" @click="SaveCropper"
-          >确定</van-tabbar-item
-        >
+          >确定
+        </van-tabbar-item>
       </van-tabbar>
     </van-overlay>
     <van-field
@@ -71,7 +71,6 @@ const emit = defineEmits<{
 
 const show = ref(false);
 const fileList = ref([]);
-const currentFile = ref();
 const cropper = ref(null);
 const imgElRef = ref();
 const uploader = ref();
@@ -102,13 +101,10 @@ const fileByBase64 = (file, callback) => {
 
 const afterRead = files => {
   // 此时可以自行将文件上传至服务器
-  if (currentFile.value) {
-    files = currentFile.value;
-  }
   nextTick(() => {
     const reader = new FileReader();
     // const files = fileList.value[0]
-    if (files.file.type === "image/png" || files.file.type === "image/jpeg") {
+    if (files.file.type.indexOf("image/") !== -1) {
       // 在此判断是否需要图片截取
       if (props.isCutting) {
         show.value = true;
@@ -144,8 +140,9 @@ const afterRead = files => {
       reader.onload = function () {
         files.file = compress(this.result, files.file);
       };
+    } else {
+      emit("upload", fileList.value);
     }
-    emit("upload", fileList.value);
   });
 };
 const onOversize = () => {
@@ -229,9 +226,6 @@ const dataURLtoFile = (data: string, filename: string, filetype: string) => {
 };
 const SaveCropper = () => {
   const files = fileList.value[0]?.file;
-  if (!currentFile.value) {
-    currentFile.value = fileList.value[0];
-  }
   const type = files.type;
   const croppedCanvas = cropper.value.getCroppedCanvas().toDataURL(type);
   const blob = dataURLtoBlob(croppedCanvas);
@@ -244,7 +238,7 @@ const SaveCropper = () => {
   };
   fileList.value = [file];
   show.value = false;
-  uploader.value?.closeImagePreview();
+  // uploader.value?.closeImagePreview();
   emit("upload", fileList.value);
 };
 const dataURLtoBlob = (data: string) => {

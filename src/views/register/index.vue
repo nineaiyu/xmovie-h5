@@ -1,5 +1,4 @@
 <template>
-  <!--  <van-watermark content="合合交友" />-->
   <van-space direction="vertical" class="text-center mt-5 w-full" :size="20">
     <van-image round width="10rem" height="10rem" :src="logo" />
     <h2>爱看影院-注册会员</h2>

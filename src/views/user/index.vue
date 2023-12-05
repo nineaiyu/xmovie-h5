@@ -34,7 +34,6 @@ const onClickRight = () => {
   useToggleDarkMode();
 };
 
-const fileList = ref([]);
 const afterRead = files => {
   const file = files[0];
   file.status = "uploading";
@@ -49,7 +48,7 @@ const afterRead = files => {
     } else {
       file.status = "done";
       showNotify({ type: "success", message: "更新完成" });
-      fileList.value = [];
+      showAvatar.value = false;
       getUserData();
     }
   });
@@ -71,7 +70,6 @@ const password = reactive({
   old_password: "",
   sure_password: ""
 });
-const saveAvatar = () => {};
 </script>
 <template>
   <van-dialog
@@ -99,6 +97,22 @@ const saveAvatar = () => {};
       </van-cell-group>
     </van-form>
   </van-dialog>
+  <van-action-sheet v-model:show="showAvatar" title="更新头像">
+    <van-cell>
+      <van-row>
+        <van-col :span="8" :offset="8">
+          <file-upload
+            v-if="showAvatar"
+            :max-size="5"
+            :max-count="1"
+            :is-cutting="true"
+            accept="image/*"
+            @upload="afterRead"
+          />
+        </van-col>
+      </van-row>
+    </van-cell>
+  </van-action-sheet>
   <van-cell-group inset>
     <van-cell>
       <van-row v-if="userinfo" class="text-left mt-10">
@@ -122,15 +136,14 @@ const saveAvatar = () => {};
         @click="onClickRight"
       />
     </van-cell>
-    <van-cell title="修改头像" class="mt-2" size="large">
-      <file-upload
-        :max-size="5"
-        :max-count="1"
-        :is-cutting="true"
-        accept="image/*"
-        @upload="afterRead"
-      />
-    </van-cell>
+    <van-cell
+      title="修改头像"
+      class="mt-2"
+      size="large"
+      is-link
+      arrow-direction="down"
+      @click="showAvatar = true"
+    />
     <van-cell
       title="修改密码"
       class="mt-2"
