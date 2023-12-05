@@ -115,14 +115,14 @@ const password = reactive({
   </van-action-sheet>
   <van-cell-group inset>
     <van-cell>
-      <van-row v-if="userinfo" class="text-left mt-10">
+      <van-row v-if="userinfo" class="text-left">
         <van-col :span="7">
           <van-image :src="userinfo.avatar" fit="cover" :radius="6" />
         </van-col>
         <van-col :span="16" :offset="1">
           <div class="font-bold">{{ userinfo.username }}</div>
-          <div class="font-thin">{{ userinfo.nickname }}</div>
-          <div class="font-thin">邮箱 {{ userinfo.email }}</div>
+          <div class="font-light">{{ userinfo.nickname }}</div>
+          <div class="font-light">邮箱 {{ userinfo.email }}</div>
           <div>
             上次登录 {{ dayjs(userinfo.last_login).format("YYYY-MM-DD HH:mm") }}
           </div>

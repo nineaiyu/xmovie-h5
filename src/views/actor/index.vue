@@ -61,7 +61,7 @@ onMounted(() => {
       </van-col>
       <van-col :span="14" offset="2">
         <van-row class="font-bold text-1xl">{{ actorDetail?.name }}</van-row>
-        <van-row class="font-thin">{{ actorDetail?.foreign_name }}</van-row>
+        <van-row class="font-light">{{ actorDetail?.foreign_name }}</van-row>
         <van-row>生日：{{ actorDetail?.birthday }}</van-row>
         <van-row>性别：{{ actorDetail?.sex === 1 ? "女" : "男" }}</van-row>
       </van-col>

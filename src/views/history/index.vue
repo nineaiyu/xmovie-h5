@@ -166,8 +166,8 @@ const confirmDelete = (pk: string) => {
                 </van-col>
                 <van-col :span="16" offset="1">
                   <span class="font-bold">{{ item.film.name }}</span>
-                  <div class="font-thin">{{ item.episode.name }}</div>
-                  <div>
+                  <div class="font-light">{{ item.episode.name }}</div>
+                  <div class="mt-2">
                     已经观看 {{ formatVideoTimes(item.times) }}，总共
                     {{ formatVideoTimes(item.episode.times) }}
                   </div>
