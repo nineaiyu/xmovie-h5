@@ -10,6 +10,7 @@ import vueSetupExtend from "vite-plugin-vue-setup-extend";
 import viteCompression from "vite-plugin-compression";
 import { vitePluginFakeServer } from "vite-plugin-fake-server";
 import removeConsole from "vite-plugin-remove-console";
+import { enableCDN } from "./build/cdn";
 
 // 当前工作目录路径
 const root: string = process.cwd();
@@ -46,7 +47,9 @@ export default defineConfig(({ mode }) => {
       // 生产环境 gzip 压缩资源
       viteCompression(),
       // 线上环境删除console
-      removeConsole({ external: ["src/assets/iconfont/iconfont.js"] })
+      removeConsole({ external: ["src/assets/iconfont/iconfont.js"] }),
+      // 生产环境默认不启用 CDN 加速
+      enableCDN(env.VITE_CDN_DEPS)
       // 注入模板数据
       // createHtmlPlugin({
       //   minify: true,

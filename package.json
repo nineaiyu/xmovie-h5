@@ -96,6 +96,7 @@
     "typescript": "^5.2.2",
     "unplugin-vue-components": "^0.25.2",
     "vite": "^5.0.3",
+    "vite-plugin-cdn2": "^0.15.2",
     "vite-plugin-compression": "^0.5.1",
     "vite-plugin-fake-server": "^2.0.0",
     "vite-plugin-remove-console": "^2.1.1",
