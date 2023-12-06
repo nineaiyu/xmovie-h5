@@ -1,0 +1,24 @@
+version: "3.2"
+
+services:
+  xmovie-h5-build:
+    container_name: xmovie-h5-build
+    image: "xmovie-h5-build"
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    build:
+      context: .
+      dockerfile: Dockerfile.build
+
+  xmovie-h5-prod:
+    container_name: xmovie-h5-prod
+    restart: always
+    image: "nginx:stable-alpine"
+    volumes:
+      - ./dist:/usr/share/nginx/html
+    command: ["nginx", "-g", "daemon off;"]
+    #depends_on:
+    #   - xmovie-h5-build
+    ports:
+      - 8891:80

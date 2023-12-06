@@ -44,7 +44,7 @@ import { onMounted, reactive, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useUserStore } from "@/store/modules/user";
 import { showNotify } from "vant";
-import logo from "@/assets/20231203133640.png";
+import logo from "@/assets/logo.png";
 import { getTempTokenApi } from "@/api/system/auth";
 import "vant/es/notify/style";
 const registerForm = reactive({

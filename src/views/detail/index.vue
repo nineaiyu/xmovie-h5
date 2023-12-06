@@ -128,29 +128,31 @@ const goDetail = (pk: string) => {
               <van-image :src="filmDetail.poster" fit="cover" :radius="6" />
             </van-col>
             <van-col :span="16" offset="1">
-              <h3>{{ filmDetail.name }}</h3>
-              <van-col>{{ filmDetail.release_date }}</van-col>
-              <van-col class="mt-1">
-                <van-tag
-                  v-for="(item, index) in [
-                    ...filmDetail.channel_info,
-                    ...filmDetail.category_info,
-                    ...filmDetail.region_info,
-                    ...filmDetail.language_info
-                  ]"
-                  :key="item.value"
-                  plain
-                  class="m-1"
-                  :type="getIndexType(index % 3)"
-                  >{{ item.label }}
-                </van-tag>
-              </van-col>
+              <van-space direction="vertical" fill>
+                <van-col class="text-2xl">{{ filmDetail.name }}</van-col>
+                <van-col>{{ filmDetail.release_date }}</van-col>
+                <van-col class="mt-1">
+                  <van-tag
+                    v-for="(item, index) in [
+                      ...filmDetail.channel_info,
+                      ...filmDetail.category_info,
+                      ...filmDetail.region_info,
+                      ...filmDetail.language_info
+                    ]"
+                    :key="item.value"
+                    plain
+                    class="m-1"
+                    :type="getIndexType(index % 3)"
+                    >{{ item.label }}
+                  </van-tag>
+                </van-col>
+              </van-space>
             </van-col>
           </van-row>
           <van-row class="mt-5">
             <van-col :span="8" style="line-height: 25px"
-              >评分：{{ filmDetail.rate }} 分</van-col
-            >
+              >评分：{{ filmDetail.rate }} 分
+            </van-col>
             <van-col :span="12">
               <van-rate v-model="filmDetail.rate" allow-half />
             </van-col>
