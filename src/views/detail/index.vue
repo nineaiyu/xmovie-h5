@@ -98,7 +98,7 @@ const goDetail = (pk: string) => {
 
 <template>
   <div>
-    <div v-if="episodeList.length > 0" class="h-[30vh] w-full">
+    <div v-if="episodeList.length > 0" class="min-h-[30vh] w-full">
       <video-play
         v-if="currentPk !== '0'"
         :pk="currentPk.toString()"

@@ -26,3 +26,12 @@ export type DetailResult = {
   }[];
   film: object;
 };
+
+export type VideoPreviewResult = {
+  detail: string;
+  code: number;
+  data: {
+    label: string;
+    url: string;
+  }[];
+};

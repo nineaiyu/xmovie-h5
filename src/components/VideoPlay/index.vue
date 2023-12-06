@@ -4,7 +4,7 @@ import Player, { Events } from "xgplayer";
 import HlsJsPlugin from "xgplayer-hls.js";
 import "vant/es/notify/style";
 import "xgplayer/dist/index.min.css";
-import { getFilmPreviewApi } from "@/api/movie/film";
+import { getFilmPreviewApi, getFilmPreviewJsonApi } from "@/api/movie/film";
 import { showNotify } from "vant";
 import { throttle } from "@/utils/util";
 import { updateWatchHistoryTimesApi } from "@/api/movie/history";
@@ -24,52 +24,67 @@ const props = withDefaults(defineProps<Props>(), {
 
 const player = ref();
 
+const initVideo = (result: object[] | any, times: number, file_pk: number) => {
+  // https://h5player.bytedance.com/
+  player.value = new Player({
+    id: "mse",
+    // url: preview_url,
+    volume: 0.6, // 初始音量
+    autoplay: props.autoplay, // 自动播放
+    videoInit: props.init,
+    playsinline: true,
+    startTime: times ?? 0,
+    plugins: [HlsJsPlugin],
+    fluid: true,
+    //传入倍速可选数组
+    playbackRate: [0.5, 0.75, 1, 1.5, 2],
+    ignores: ["download"],
+    fitVideoSize: "fixed",
+    definition: {
+      list: result
+    },
+    rotate: {
+      //视频旋转按钮配置项
+      innerRotate: true, //只旋转内部video
+      clockwise: true // 旋转方向是否为顺时针
+    },
+    // download: true, //设置download控件显示,
+    pip: true, //pc画中画
+    keyShortcut: true, //pc
+    screenShot: {
+      saveImg: true,
+      quality: 0.92,
+      type: "image/png",
+      format: ".png"
+    } // 截图
+    // cssFullscreen: true, //网页样式全屏
+  });
+  // 监听网页全屏(即页面全屏)也是一样的逻辑
+  player.value.on(Events.TIME_UPDATE, ({ currentTime }) => {
+    if (getToken()) {
+      updateVideoPlayTimes(currentTime, file_pk);
+    }
+  });
+};
+
 function getPreview() {
   getFilmPreviewApi(props.pk).then((res: any) => {
     if (res.code === 1000 && res.data.category === "video") {
-      // https://h5player.bytedance.com/
-      player.value = new Player({
-        id: "mse",
-        url: res.data.preview_url,
-        volume: 0.6, // 初始音量
-        autoplay: props.autoplay, // 自动播放
-        videoInit: props.init,
-        playsinline: true,
-        startTime: res.data.times ?? 0,
-        cors: false,
-        plugins: [HlsJsPlugin],
-        fluid: true,
-        //传入倍速可选数组
-        playbackRate: [0.5, 0.75, 1, 1.5, 2],
-        defaultPlaybackRate: 1,
-        fitVideoSize: "fixed",
-        rotate: {
-          //视频旋转按钮配置项
-          innerRotate: true, //只旋转内部video
-          clockwise: true // 旋转方向是否为顺时针
-        },
-        rotateFullscreen: true, // 样式横屏全屏
-        // download: true, //设置download控件显示,
-        pip: true, //画中画
-        screenShot: {
-          saveImg: true,
-          quality: 0.92,
-          type: "image/png",
-          format: ".png"
-        }, // 截图
-        cssFullscreen: true, //网页样式全屏
-        keyShortcut: true,
-        keyShortcutStep: {
-          //设置调整步长
-          currentTime: 15, //播放进度调整步长，默认10秒
-          volume: 0.2 //音量调整步长，默认0.1
-        },
-        definitionActive: "click"
-      });
-      // 监听网页全屏(即页面全屏)也是一样的逻辑
-      player.value.on(Events.TIME_UPDATE, ({ currentTime }) => {
-        if (getToken()) {
-          updateVideoPlayTimes(currentTime, res.data.pk);
+      getFilmPreviewJsonApi(res.data.preview_url).then(({ data, code }) => {
+        if (code === 1000) {
+          const result = [];
+          data.forEach(item => {
+            result.push({
+              definition: item.label,
+              url: item.url,
+              text: {
+                en: item.label
+              }
+            });
+          });
+          initVideo(result, res.data.times, res.data.pk);
+        } else {
+          showNotify({ type: "danger", message: res.detail });
         }
       });
     } else {

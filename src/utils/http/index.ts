@@ -71,8 +71,13 @@ class PureHttp {
   private httpInterceptorsRequest(): void {
     PureHttp.axiosInstance.interceptors.request.use(
       async (config: PureHttpRequestConfig): Promise<any> => {
-        // 开启进度条动画
-        NProgress.start();
+        /** 请求动画白名单，放置一些不需要动画的接口 */
+        const whiteProgressList = ["/api/movies/h5/history/times"];
+        if (whiteProgressList.indexOf(config.url) === -1) {
+          // 开启进度条动画
+          NProgress.start();
+        }
+
         // 优先判断post/get等方法是否传入回调，否则执行初始化设置等回调
         if (typeof config.beforeRequestCallback === "function") {
           config.beforeRequestCallback(config);
