@@ -169,7 +169,7 @@ const goDetail = (pk: string) => {
                 @click="goDetail(item.pk)"
               >
                 <van-image :src="item.avatar" fit="cover" :radius="6" />
-                <van-text-ellipsis :content="item.name" />
+                <p class="truncate">{{ item.name }}</p>
               </div>
             </div>
           </van-row>
