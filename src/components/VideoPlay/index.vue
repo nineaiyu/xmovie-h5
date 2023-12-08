@@ -101,11 +101,15 @@ function getPreview() {
 }
 
 const updateVideoPlayTimesByCookie = throttle((times, pk) => {
-  setHistoryByCookie(props.film, props.pk, times);
+  if (times && times > 0) {
+    setHistoryByCookie(props.film, props.pk, times);
+  }
 }, 2 * 1000);
 
 const updateVideoPlayTimes = throttle((times, pk) => {
-  updateWatchHistoryTimesApi({ times, file_id: pk });
+  if (times && times > 0) {
+    updateWatchHistoryTimesApi({ times, file_id: pk });
+  }
 }, 5 * 1000);
 
 onMounted(() => {
