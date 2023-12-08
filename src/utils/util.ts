@@ -1,3 +1,5 @@
+import Cookies from "js-cookie";
+
 type FunctionArgs<Args extends any[] = any[], Return = void> = (
   ...args: Args
 ) => Return;
@@ -33,4 +35,40 @@ export function formatVideoTimes(times: number) {
   }
   fs += `${s}`;
   return fs;
+}
+
+export function downloadFileByUrl(url: string) {
+  const iframe = document.createElement("iframe", {});
+  iframe.style.display = "none"; // 防止影响页面
+  iframe.style.height = "0"; // 防止影响页面
+  iframe.referrerPolicy = "no-referrer";
+  iframe.src = url;
+  document.body.appendChild(iframe);
+  setTimeout(
+    () => {
+      iframe.remove();
+    },
+    5 * 60 * 1000
+  );
+}
+
+export function getHistoryByCookie(film: string) {
+  const data = Cookies.get(`currentPlay_${film}`);
+  if (data) {
+    return JSON.parse(data);
+  }
+  return {};
+}
+export function setHistoryByCookie(
+  film: string,
+  currentPk: string,
+  times: number
+) {
+  Cookies.set(
+    `currentPlay_${film}`,
+    JSON.stringify({ film, currentPk, times }),
+    {
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7)
+    }
+  );
 }

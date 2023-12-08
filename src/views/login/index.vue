@@ -27,6 +27,7 @@
           :rules="[{ required: true, message: '请填写密码' }]"
         />
         <van-field
+          v-if="isLogin"
           v-model="loginForm.captcha_code"
           center
           clearable
@@ -38,15 +39,24 @@
             <ReImageVerify v-model:code="loginForm.captcha_key" />
           </template>
         </van-field>
+        <van-field
+          v-else
+          v-model="loginForm.repeatPassword"
+          :rules="[{ validator: repeatPasswordRule, message: '密码不一致' }]"
+          center
+          clearable
+          label="确定密码"
+          placeholder="请再次输入密码"
+        />
       </van-cell-group>
       <div class="m-5">
-        <van-button plain block type="primary" native-type="submit">
-          登录
+        <van-button plain block type="primary" @click="handleLogin">
+          {{ title[`${isLogin}`] }}
         </van-button>
       </div>
       <div class="m-5">
-        <van-button plain block type="success" @click="goRegister">
-          注册
+        <van-button plain block type="success" @click="isLogin = !isLogin">
+          {{ title[`${!isLogin}`] }}
         </van-button>
       </div>
     </van-form>
@@ -68,13 +78,20 @@ const loginForm = reactive({
   password: "",
   token: "",
   captcha_key: "",
-  captcha_code: ""
+  captcha_code: "",
+  repeatPassword: "",
+  channel: "xmovie"
 });
 const user_store = useUserStore();
 const redirect = ref();
 const otherQuery = ref({});
 const router = useRouter();
 const route = useRoute();
+const isLogin = ref(true);
+const title = reactive({
+  true: "登录",
+  false: "注册"
+});
 const initToken = () => {
   getTempTokenApi().then(res => {
     if (res.code === 1000) {
@@ -82,21 +99,49 @@ const initToken = () => {
     }
   });
 };
-
+const repeatPasswordRule = value => {
+  if (value === "") {
+    return false;
+  } else if (loginForm.password !== value) {
+    return false;
+  }
+  return true;
+};
 const handleLogin = () => {
-  if (loginForm.username && loginForm.password) {
-    user_store
-      .loginByUsername(loginForm)
-      .then(() => {
-        showNotify({ type: "success", message: "登录成功" });
-        router.push({ path: redirect.value || "/", query: otherQuery.value });
-      })
-      .catch(res => {
-        showNotify({ type: "danger", message: res.detail });
-        initToken();
-      });
+  if (isLogin.value) {
+    if (loginForm.username && loginForm.password) {
+      user_store
+        .loginByUsername(loginForm)
+        .then(() => {
+          showNotify({ type: "success", message: "登录成功" });
+          router.push({ path: redirect.value || "/", query: otherQuery.value });
+        })
+        .catch(res => {
+          showNotify({ type: "danger", message: res.detail });
+          initToken();
+        });
+    } else {
+      showNotify({ type: "warning", message: "手机号或验证码不存在" });
+    }
   } else {
-    showNotify({ type: "warning", message: "手机号或验证码不存在" });
+    if (
+      loginForm.username &&
+      loginForm.password &&
+      loginForm.password === loginForm.repeatPassword
+    ) {
+      user_store
+        .registerByUsername(loginForm)
+        .then(() => {
+          showNotify({ type: "success", message: "注册成功" });
+          router.push({ path: redirect.value || "/", query: otherQuery.value });
+        })
+        .catch(res => {
+          showNotify({ type: "danger", message: res.detail });
+          initToken();
+        });
+    } else {
+      showNotify({ type: "warning", message: "注册失败" });
+    }
   }
 };
 

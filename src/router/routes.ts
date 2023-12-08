@@ -33,14 +33,6 @@ const routes: Array<RouteRecordRaw> = [
         }
       },
       {
-        path: "actor/:pk",
-        name: "Actor",
-        component: () => import("@/views/actor/index.vue"),
-        meta: {
-          title: "演员"
-        }
-      },
-      {
         path: "history",
         name: "History",
         component: () => import("@/views/history/index.vue"),
@@ -54,14 +46,6 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("@/views/login/index.vue"),
         meta: {
           title: "登录"
-        }
-      },
-      {
-        path: "register",
-        name: "Register",
-        component: () => import("@/views/register/index.vue"),
-        meta: {
-          title: "注册"
         }
       },
       {

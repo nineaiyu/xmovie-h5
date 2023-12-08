@@ -12,3 +12,10 @@ export const getFilmPreviewApi = (pk: string) => {
 export const getFilmPreviewJsonApi = (url: string) => {
   return http.request<VideoPreviewResult>("get", `${url}&act=json`);
 };
+
+export const getFilmDownloadApi = (pk: string) => {
+  return http.request<VideoPreviewResult>(
+    "post",
+    `/api/movies/h5/preview/${pk}`
+  );
+};

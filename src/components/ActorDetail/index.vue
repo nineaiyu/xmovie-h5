@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { onMounted, reactive, ref } from "vue";
-import { RouteParamValue, useRoute } from "vue-router";
 import { getActorDetailApi } from "@/api/movie/actor";
 import { getFilmDataApi } from "@/api/movie/home";
 
@@ -13,10 +12,17 @@ interface ActorResultType {
   sex: number;
 }
 
-const route = useRoute();
+interface Props {
+  pk: string;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  pk: ""
+});
+
 const actorDetail = ref<ActorResultType>();
 
-const getActorDetail = (pk: string | RouteParamValue[] | any) => {
+const getActorDetail = (pk: string) => {
   getActorDetailApi(pk).then(res => {
     if (res.code === 1000) {
       actorDetail.value = res.data;
@@ -29,7 +35,7 @@ const finished = ref(false);
 const queryParams = reactive({
   ordering: "-created_time",
   name: "",
-  actor: route.params.pk,
+  actor: props.pk,
   page: 1,
   size: 10
 });
@@ -45,16 +51,13 @@ const getData = () => {
   });
 };
 onMounted(() => {
-  getActorDetail(route.params.pk);
+  getActorDetail(props.pk);
   getData();
 });
 </script>
 <template>
   <van-back-top right="5vw" bottom="10vh" />
   <van-cell>
-    <van-row>
-      <h3>演员信息</h3>
-    </van-row>
     <van-row class="text-left">
       <van-col :span="7">
         <van-image :src="actorDetail?.avatar" fit="cover" :radius="6" />
@@ -82,7 +85,7 @@ onMounted(() => {
   </van-cell>
   <van-cell>
     <van-row>
-      <h3>影视作品</h3>
+      <h3>相关影视作品</h3>
     </van-row>
   </van-cell>
   <van-list

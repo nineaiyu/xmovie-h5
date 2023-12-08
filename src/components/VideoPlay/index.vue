@@ -6,18 +6,20 @@ import "vant/es/notify/style";
 import "xgplayer/dist/index.min.css";
 import { getFilmPreviewApi, getFilmPreviewJsonApi } from "@/api/movie/film";
 import { showNotify } from "vant";
-import { throttle } from "@/utils/util";
+import { getHistoryByCookie, setHistoryByCookie, throttle } from "@/utils/util";
 import { updateWatchHistoryTimesApi } from "@/api/movie/history";
 import { getToken } from "@/utils/auth";
 
 interface Props {
   pk: string;
+  film: string;
   autoplay?: boolean;
   init?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   pk: "",
+  film: "",
   autoplay: false,
   init: false
 });
@@ -25,6 +27,9 @@ const props = withDefaults(defineProps<Props>(), {
 const player = ref();
 
 const initVideo = (result: object[] | any, times: number, file_pk: number) => {
+  if (!getToken()) {
+    times = getHistoryByCookie(props.film)?.times ?? times;
+  }
   // https://h5player.bytedance.com/
   player.value = new Player({
     id: "mse",
@@ -63,6 +68,8 @@ const initVideo = (result: object[] | any, times: number, file_pk: number) => {
   player.value.on(Events.TIME_UPDATE, ({ currentTime }) => {
     if (getToken()) {
       updateVideoPlayTimes(currentTime, file_pk);
+    } else {
+      updateVideoPlayTimesByCookie(currentTime, file_pk);
     }
   });
 };
@@ -92,6 +99,10 @@ function getPreview() {
     }
   });
 }
+
+const updateVideoPlayTimesByCookie = throttle((times, pk) => {
+  setHistoryByCookie(props.film, props.pk, times);
+}, 2 * 1000);
 
 const updateVideoPlayTimes = throttle((times, pk) => {
   updateWatchHistoryTimesApi({ times, file_id: pk });

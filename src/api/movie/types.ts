@@ -30,6 +30,7 @@ export type DetailResult = {
 export type VideoPreviewResult = {
   detail: string;
   code: number;
+  download_url: string;
   data: {
     label: string;
     url: string;

@@ -1,8 +1,11 @@
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import { RouteParamValue, useRoute } from "vue-router";
-import { getFilmDetailApi } from "@/api/movie/film";
-import router from "@/router";
+import { getFilmDetailApi, getFilmDownloadApi } from "@/api/movie/film";
+import { showNotify } from "vant";
+import "vant/es/notify/style";
+import { downloadFileByUrl, getHistoryByCookie } from "@/utils/util";
+import { getToken } from "@/utils/auth";
 
 const route = useRoute();
 const filmDetail = ref<FilmResultType>();
@@ -10,12 +13,22 @@ const episodeList = ref([]);
 const actorList = ref([]);
 const currentPk = ref("0");
 const currentIndex = ref(0);
+const showActorDetail = reactive({
+  show: false,
+  pk: ""
+});
 const getFilmDetail = (pk: string | RouteParamValue[] | any) => {
   getFilmDetailApi(pk).then(res => {
     filmDetail.value = res.film;
     episodeList.value = res.episode;
     if (episodeList.value.length > 0) {
-      currentPk.value = filmDetail.value.current_play_pk;
+      if (getToken()) {
+        currentPk.value = filmDetail.value.current_play_pk;
+      } else {
+        currentPk.value =
+          getHistoryByCookie(filmDetail.value.pk)?.currentPk ??
+          filmDetail.value.current_play_pk;
+      }
     }
     actorList.value = [...res.director];
     res.starring.forEach(item => {
@@ -89,9 +102,18 @@ const playVideo = (pk: string, index: number) => {
 };
 
 const goDetail = (pk: string) => {
-  router.push({
-    name: "Actor",
-    params: { pk: pk }
+  showActorDetail.show = true;
+  showActorDetail.pk = pk;
+};
+
+const downloadFile = (pk: string) => {
+  getFilmDownloadApi(pk).then(res => {
+    if (res.code === 1000) {
+      showNotify({ type: "success", message: "获取下载连接成功" });
+      downloadFileByUrl(res.download_url);
+    } else {
+      showNotify({ type: "danger", message: res.detail });
+    }
   });
 };
 </script>
@@ -101,6 +123,7 @@ const goDetail = (pk: string) => {
     <div v-if="episodeList.length > 0" class="min-h-[30vh] w-full">
       <video-play
         v-if="currentPk !== '0'"
+        :film="filmDetail.pk.toString()"
         :pk="currentPk.toString()"
         :autoplay="true"
         :init="false"
@@ -111,15 +134,28 @@ const goDetail = (pk: string) => {
       <van-tabs class="m-5">
         <van-tab title="播放列表">
           <van-space direction="vertical" fill class="mt-5">
-            <van-button
-              v-for="(item, index) in episodeList"
-              :key="item.pk"
-              block
-              :type="item.pk === currentPk ? 'success' : 'default'"
-              @click="playVideo(item.pk, index)"
-            >
-              第{{ index + 1 }}集：{{ item.name }}
-            </van-button>
+            <van-swipe-cell v-for="(item, index) in episodeList" :key="item.pk">
+              <van-button
+                block
+                :type="
+                  item.pk.toString() === currentPk.toString()
+                    ? 'success'
+                    : 'default'
+                "
+                @click="playVideo(item.pk, index)"
+              >
+                第{{ index + 1 }}集：{{ item.name }}
+              </van-button>
+              <template #right>
+                <van-button
+                  square
+                  text="下载"
+                  type="primary"
+                  plain
+                  @click="downloadFile(item.pk)"
+                />
+              </template>
+            </van-swipe-cell>
           </van-space>
         </van-tab>
         <van-tab v-if="filmDetail" title="详细内容" class="mt-5">
@@ -160,6 +196,12 @@ const goDetail = (pk: string) => {
           <van-row>
             <h3>演员</h3>
           </van-row>
+          <van-action-sheet
+            v-model:show="showActorDetail.show"
+            title="演员信息"
+          >
+            <actor-detail :pk="showActorDetail.pk" />
+          </van-action-sheet>
           <van-row>
             <div class="overflow-hidden whitespace-nowrap overflow-x-auto">
               <div
