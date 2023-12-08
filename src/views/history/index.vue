@@ -40,10 +40,8 @@ const Result = ref<historyDetail[]>([]);
 const getData = () => {
   getWatchHistoryListApi(queryParams).then(({ code, data }) => {
     if (code === 1000) {
-      Result.value = [...data.results];
-      if (data.total === Result.value.length) {
-        finished.value = true;
-      }
+      Result.value = [...Result.value, ...data.results];
+      finished.value = data.total === Result.value.length;
     }
     loading.value = false;
   });
@@ -58,11 +56,14 @@ const onLoad = () => {
     queryParams.page = 1;
     Result.value = [];
     refreshing.value = false;
+  } else {
+    queryParams.page += 1;
   }
   getData();
 };
 
 onMounted(() => {
+  finished.value = true;
   getData();
 });
 const refreshData = () => {

@@ -17,10 +17,8 @@ const FilmResult = ref([]);
 const getData = () => {
   getFilmDataApi(queryParams).then(({ code, data }) => {
     if (code === 1000) {
-      FilmResult.value = [...data.results];
-      if (data.total === FilmResult.value.length) {
-        finished.value = true;
-      }
+      FilmResult.value = [...FilmResult.value, ...data.results];
+      finished.value = data.total === FilmResult.value.length;
     }
     loading.value = false;
   });
@@ -56,12 +54,15 @@ const onLoad = () => {
     queryParams.page = 1;
     FilmResult.value = [];
     refreshing.value = false;
+  } else {
+    queryParams.page += 1;
   }
   getData();
 };
 
 onMounted(() => {
   getFilter();
+  finished.value = true;
   getData();
 });
 const itemRef = ref(null);

@@ -42,18 +42,22 @@ const queryParams = reactive({
 const getData = () => {
   getFilmDataApi(queryParams).then(({ code, data }) => {
     if (code === 1000) {
-      FilmResult.value = [...data.results];
-      if (data.total === FilmResult.value.length) {
-        finished.value = true;
-      }
+      FilmResult.value = [...FilmResult.value, ...data.results];
+      finished.value = data.total === FilmResult.value.length;
     }
     loading.value = false;
   });
 };
 onMounted(() => {
   getActorDetail(props.pk);
+  finished.value = true;
   getData();
 });
+
+const onLoad = () => {
+  queryParams.page += 1;
+  getData();
+};
 </script>
 <template>
   <van-back-top right="5vw" bottom="10vh" />
@@ -92,7 +96,7 @@ onMounted(() => {
     v-model:loading="loading"
     :finished="finished"
     finished-text="没有更多了"
-    @load="getData"
+    @load="onLoad"
   >
     <van-cell>
       <van-grid :gutter="10" :column-num="3">
