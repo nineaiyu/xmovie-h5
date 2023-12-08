@@ -120,15 +120,17 @@ const downloadFile = (pk: string) => {
 
 <template>
   <div>
-    <div v-if="episodeList.length > 0" class="min-h-[30vh] w-full">
-      <video-play
-        v-if="currentPk !== '0'"
-        :film="filmDetail.pk.toString()"
-        :pk="currentPk.toString()"
-        :autoplay="true"
-        :init="false"
-      />
-    </div>
+    <van-sticky v-if="episodeList.length > 0">
+      <div class="min-h-[30vh] w-full">
+        <video-play
+          v-if="currentPk !== '0'"
+          :film="filmDetail.pk.toString()"
+          :pk="currentPk.toString()"
+          :autoplay="true"
+          :init="false"
+        />
+      </div>
+    </van-sticky>
     <van-empty v-else image="network" description="播放列表获取失败" />
     <van-col class="mt-5">
       <van-tabs class="m-5">
@@ -190,7 +192,7 @@ const downloadFile = (pk: string) => {
               >评分：{{ filmDetail.rate }} 分
             </van-col>
             <van-col :span="12">
-              <van-rate v-model="filmDetail.rate" allow-half />
+              <van-rate :model-value="Number(filmDetail.rate)" allow-half />
             </van-col>
           </van-row>
           <van-row>
