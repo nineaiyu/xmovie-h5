@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from "vue";
-import { getFilmDataApi, getFilterApi } from "@/api/movie/home";
+import { getFilmDataApi, getFilterApi } from "@/api/movie/film";
 
 const loading = ref(false);
 const refreshing = ref(false);
@@ -87,45 +87,46 @@ const refreshData = () => {
     :disabled="refreshDisable"
     @refresh="refreshData"
   >
-    <van-dropdown-menu ref="menuRef">
-      <van-dropdown-item
-        ref="itemRef"
-        title="筛选"
-        @opened="refreshDisable = true"
-        @closed="refreshDisable = false"
-      >
-        <van-tabs
-          v-for="category in CategoryResult"
-          :key="category.key"
-          v-model:active="queryParams[category.key]"
-          type="line"
-          swipeable
+    <van-sticky>
+      <van-dropdown-menu ref="menuRef">
+        <van-dropdown-item
+          ref="itemRef"
+          title="筛选"
+          @opened="refreshDisable = true"
+          @closed="refreshDisable = false"
         >
-          <van-tab
-            v-for="item in category.result"
-            :key="item.value"
-            :title="item.label"
-            :name="item.value"
-          />
-        </van-tabs>
-        <div>
-          <van-button block @click="onConfirm"> 确认 </van-button>
-        </div>
-      </van-dropdown-item>
-      <van-dropdown-item
-        v-model="queryParams.name"
-        title="搜索"
-        @opened="refreshDisable = true"
-        @closed="refreshDisable = false"
-      >
-        <van-search
+          <van-tabs
+            v-for="category in CategoryResult"
+            :key="category.key"
+            v-model:active="queryParams[category.key]"
+            type="line"
+            swipeable
+          >
+            <van-tab
+              v-for="item in category.result"
+              :key="item.value"
+              :title="item.label"
+              :name="item.value"
+            />
+          </van-tabs>
+          <div>
+            <van-button block @click="onConfirm"> 确认 </van-button>
+          </div>
+        </van-dropdown-item>
+        <van-dropdown-item
           v-model="queryParams.name"
-          placeholder="请输入搜索关键词"
-          @search="onConfirm"
-        />
-      </van-dropdown-item>
-    </van-dropdown-menu>
-
+          title="搜索"
+          @opened="refreshDisable = true"
+          @closed="refreshDisable = false"
+        >
+          <van-search
+            v-model="queryParams.name"
+            placeholder="请输入搜索关键词"
+            @search="onConfirm"
+          />
+        </van-dropdown-item>
+      </van-dropdown-menu>
+    </van-sticky>
     <van-list
       v-model:loading="loading"
       :finished="finished"

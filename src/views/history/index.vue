@@ -41,12 +41,13 @@ const getData = () => {
   getWatchHistoryListApi(queryParams).then(({ code, data }) => {
     if (code === 1000) {
       Result.value = [...Result.value, ...data.results];
+      total.value = data.total;
       finished.value = data.total === Result.value.length;
     }
     loading.value = false;
   });
 };
-
+const total = ref(0);
 const finished = ref(false);
 const refreshDisable = ref(false);
 const onLoad = () => {
@@ -120,18 +121,20 @@ const confirmDelete = (pk: string) => {
 
 <template>
   <van-back-top right="5vw" bottom="10vh" />
-  <van-cell>
-    <van-search
-      v-model="queryParams.name"
-      show-action
-      placeholder="请输入搜索关键词"
-      @search="onSearch"
-    >
-      <template #action>
-        <span class="text-red-400" @click="confirmClean">清空</span>
-      </template>
-    </van-search>
-  </van-cell>
+  <van-sticky>
+    <van-cell>
+      <van-search
+        v-model="queryParams.name"
+        show-action
+        placeholder="请输入搜索关键词"
+        @search="onSearch"
+      >
+        <template #action>
+          <span class="text-red-400" @click="confirmClean">清空</span>
+        </template>
+      </van-search>
+    </van-cell>
+  </van-sticky>
   <van-pull-refresh
     v-model="refreshing"
     :disabled="refreshDisable"
@@ -145,7 +148,7 @@ const confirmDelete = (pk: string) => {
     >
       <van-cell>
         <van-grid :gutter="10" :column-num="1">
-          <van-swipe-cell v-for="item in Result" :key="item.pk">
+          <van-swipe-cell v-for="(item, index) in Result" :key="item.pk">
             <template #right>
               <van-space direction="vertical" fill>
                 <van-button
@@ -167,7 +170,9 @@ const confirmDelete = (pk: string) => {
                 </van-col>
                 <van-col :span="16" offset="1">
                   <span class="font-bold">{{ item.film.name }}</span>
-                  <div class="font-light">{{ item.episode.name }}</div>
+                  <div class="font-light w-full">
+                    <van-text-ellipsis :content="item.episode.name" />
+                  </div>
                   <div class="mt-2">
                     已经观看 {{ formatVideoTimes(item.times) }}，总共
                     {{ formatVideoTimes(item.episode.times) }}
@@ -181,7 +186,7 @@ const confirmDelete = (pk: string) => {
                     >
                   </van-col>
                 </van-col>
-                <van-col :span="24" class="w-full mt-2">
+                <van-col :span="20" class="w-full mt-3">
                   <van-progress
                     class="w-full"
                     :percentage="
@@ -189,6 +194,9 @@ const confirmDelete = (pk: string) => {
                     "
                     stroke-width="6"
                   />
+                </van-col>
+                <van-col :span="3" :offset="1" class="w-full">
+                  {{ index + 1 }}/{{ total }}
                 </van-col>
               </van-row>
             </van-grid-item>

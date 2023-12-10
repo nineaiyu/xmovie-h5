@@ -1,12 +1,14 @@
 <script lang="ts" setup>
 import router from "@/router";
 import { PropType } from "vue";
+import dayjs from "dayjs";
 
 interface Detail {
   pk: string;
   poster: string;
   name: string;
   rate: string;
+  release_date: string;
   category_info: {
     label: string;
   }[];
@@ -42,7 +44,18 @@ const goDetail = (pk: string) => {
         color="rgba(101 ,38, 220,0)"
         :offset="['-5vw', '-6vw']"
       >
-        <van-image :src="item.poster" fit="cover" :radius="6" />
+        <van-badge
+          position="top-left"
+          color="rgba(101 ,38, 220,0)"
+          :offset="['5vw', '3vw']"
+        >
+          <van-image :src="item.poster" fit="cover" :radius="6" />
+          <template #content>
+            <span style="font-size: 4vw; color: #029bb7">{{
+              dayjs(item.release_date).format("YYYY")
+            }}</span>
+          </template>
+        </van-badge>
         <template #content>
           <span style="font-size: 5vw; color: #f85008">{{ item.rate }}</span>
         </template>

@@ -72,7 +72,11 @@ class PureHttp {
     PureHttp.axiosInstance.interceptors.request.use(
       async (config: PureHttpRequestConfig): Promise<any> => {
         /** 请求动画白名单，放置一些不需要动画的接口 */
-        const whiteProgressList = ["/api/movies/h5/history/times"];
+        const whiteProgressList = [
+          "/api/movies/h5/history/times",
+          "/api/movies/h5/film",
+          "/api/movies/h5/history"
+        ];
         if (whiteProgressList.indexOf(config.url) === -1) {
           // 开启进度条动画
           NProgress.start();

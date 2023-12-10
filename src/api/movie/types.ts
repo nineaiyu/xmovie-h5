@@ -1,9 +1,9 @@
 export type Result = {
   detail: string;
   code: number;
-  swipe: Array<any>;
-  film: Array<any>;
-  category: Array<any>;
+  swipe?: Array<any>;
+  film?: Array<any>;
+  category?: Array<any>;
   data?: {
     /** 列表数据 */
     results: Array<any>;
@@ -17,14 +17,14 @@ export type Result = {
 };
 
 export type DetailResult = {
-  detail: string;
-  code: number;
-  episode: Array<any>;
-  starring: Array<any>;
-  director: {
+  detail?: string;
+  code?: number;
+  episode?: Array<any>;
+  starring?: Array<any>;
+  director?: {
     pk?: string;
   }[];
-  film: object;
+  film?: object;
 };
 
 export type VideoPreviewResult = {

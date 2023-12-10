@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { onMounted, reactive, ref } from "vue";
 import { getActorDetailApi } from "@/api/movie/actor";
-import { getFilmDataApi } from "@/api/movie/home";
+import { getFilmDataApi } from "@/api/movie/film";
 
 interface ActorResultType {
   avatar: string;
@@ -24,8 +24,8 @@ const actorDetail = ref<ActorResultType>();
 
 const getActorDetail = (pk: string) => {
   getActorDetailApi(pk).then(res => {
-    if (res.code === 1000) {
-      actorDetail.value = res.data;
+    if (res.code === 1000 && res.data.results.length === 1) {
+      actorDetail.value = res.data.results[0];
     }
   });
 };

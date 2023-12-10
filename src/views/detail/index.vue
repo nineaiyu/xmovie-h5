@@ -1,7 +1,11 @@
 <script lang="ts" setup>
-import { onMounted, reactive, ref } from "vue";
+import { onMounted, reactive, ref, watch } from "vue";
 import { RouteParamValue, useRoute } from "vue-router";
-import { getFilmDetailApi, getFilmDownloadApi } from "@/api/movie/film";
+import {
+  getFilmDetailApi,
+  getFilmDownloadApi,
+  getFilmRecommendDataApi
+} from "@/api/movie/film";
 import { showNotify } from "vant";
 import "vant/es/notify/style";
 import { downloadFileByUrl, getHistoryByCookie } from "@/utils/util";
@@ -10,6 +14,7 @@ import { getToken } from "@/utils/auth";
 const route = useRoute();
 const filmDetail = ref<FilmResultType>();
 const episodeList = ref([]);
+const recommendList = ref([]);
 const actorList = ref([]);
 const currentPk = ref("0");
 const currentIndex = ref(0);
@@ -48,9 +53,33 @@ const checkExist = (val, list) => {
   return false;
 };
 
-onMounted(() => {
+const getFilmRecommendData = (pk: string | RouteParamValue[] | any) => {
+  getFilmRecommendDataApi(pk).then(res => {
+    if (res.code === 1000) {
+      recommendList.value = res.data.results;
+      console.log(res.data);
+    }
+  });
+};
+
+const initData = () => {
   getFilmDetail(route.params.pk);
+  getFilmRecommendData(route.params.pk);
+};
+
+onMounted(() => {
+  initData();
 });
+
+watch(
+  () => route.params.pk,
+  val => {
+    if (val) {
+      currentPk.value = "0";
+      initData();
+    }
+  }
+);
 
 interface category {
   label: string;
@@ -159,6 +188,14 @@ const downloadFile = (pk: string) => {
               </template>
             </van-swipe-cell>
           </van-space>
+          <van-cell v-if="recommendList.length > 0">
+            <van-row>
+              <h3>影视推荐</h3>
+            </van-row>
+          </van-cell>
+          <van-grid :gutter="10" :column-num="3">
+            <film-card :data="recommendList" />
+          </van-grid>
         </van-tab>
         <van-tab v-if="filmDetail" title="详细内容" class="mt-5">
           <van-row>
@@ -202,7 +239,7 @@ const downloadFile = (pk: string) => {
             v-model:show="showActorDetail.show"
             title="演员信息"
           >
-            <actor-detail :pk="showActorDetail.pk" />
+            <actor-detail :pk="showActorDetail.pk.toString()" />
           </van-action-sheet>
           <van-row>
             <div class="overflow-hidden whitespace-nowrap overflow-x-auto">
