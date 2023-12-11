@@ -34,7 +34,7 @@ const initVideo = (result: object[] | any, times: number, file_pk: number) => {
   player.value = new Player({
     id: "mse",
     // url: preview_url,
-    volume: 0.6, // 初始音量
+    volume: 1, // 初始音量
     autoplay: props.autoplay, // 自动播放
     videoInit: props.init,
     playsinline: true,
@@ -61,8 +61,8 @@ const initVideo = (result: object[] | any, times: number, file_pk: number) => {
       quality: 0.92,
       type: "image/png",
       format: ".png"
-    } // 截图
-    // cssFullscreen: true, //网页样式全屏
+    }, // 截图
+    cssFullscreen: true //网页样式全屏
   });
   // 监听网页全屏(即页面全屏)也是一样的逻辑
   player.value.on(Events.TIME_UPDATE, ({ currentTime }) => {
