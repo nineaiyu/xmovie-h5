@@ -14,6 +14,7 @@ import { getToken } from "@/utils/auth";
 const route = useRoute();
 const filmDetail = ref<FilmResultType>();
 const episodeList = ref([]);
+const playPkList = ref([]);
 const recommendList = ref([]);
 const actorList = ref([]);
 const currentPk = ref("0");
@@ -27,6 +28,9 @@ const getFilmDetail = (pk: string | RouteParamValue[] | any) => {
     filmDetail.value = res.film;
     episodeList.value = res.episode;
     if (episodeList.value.length > 0) {
+      episodeList.value.forEach(item => {
+        playPkList.value.push(item.pk);
+      });
       if (getToken()) {
         currentPk.value = filmDetail.value.current_play_pk;
       } else {
@@ -145,6 +149,12 @@ const downloadFile = (pk: string) => {
     }
   });
 };
+const onPlayEnd = (pk: number) => {
+  let index = playPkList.value.indexOf(pk);
+  if (index > -1 && index < playPkList.value.length) {
+    playVideo(playPkList.value[index + 1], index);
+  }
+};
 </script>
 
 <template>
@@ -157,6 +167,7 @@ const downloadFile = (pk: string) => {
           :pk="currentPk.toString()"
           :autoplay="true"
           :init="false"
+          @ended="onPlayEnd"
         />
       </div>
     </van-sticky>

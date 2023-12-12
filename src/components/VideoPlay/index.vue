@@ -23,7 +23,9 @@ const props = withDefaults(defineProps<Props>(), {
   autoplay: false,
   init: false
 });
-
+const emit = defineEmits<{
+  (e: "ended", v: any): void;
+}>();
 const player = ref();
 
 const initVideo = (result: object[] | any, times: number, file_pk: number) => {
@@ -37,14 +39,15 @@ const initVideo = (result: object[] | any, times: number, file_pk: number) => {
     volume: 1, // 初始音量
     autoplay: props.autoplay, // 自动播放
     videoInit: props.init,
-    playsinline: true,
+    playsinline: true, // 是否启用内联播放模式，该配置项只在移动端生效
     startTime: times ?? 0,
     plugins: [HlsJsPlugin],
-    fluid: true,
+    fluid: true, // 是否启用流式布局，启用流式布局时根据width、height计算播放器宽高比
     //传入倍速可选数组
     playbackRate: [0.5, 0.75, 1, 1.5, 2],
     ignores: ["download"],
     fitVideoSize: "fixed",
+    fullscreenTarget: document.querySelector("#app"),
     definition: {
       list: result
     },
@@ -53,8 +56,9 @@ const initVideo = (result: object[] | any, times: number, file_pk: number) => {
       innerRotate: true, //只旋转内部video
       clockwise: true // 旋转方向是否为顺时针
     },
-    // download: true, //设置download控件显示,
+    download: false, //设置download控件显示,
     pip: true, //pc画中画
+    // miniprogress: true,
     keyShortcut: true, //pc
     screenShot: {
       saveImg: true,
@@ -64,13 +68,15 @@ const initVideo = (result: object[] | any, times: number, file_pk: number) => {
     }, // 截图
     cssFullscreen: true //网页样式全屏
   });
-  // 监听网页全屏(即页面全屏)也是一样的逻辑
   player.value.on(Events.TIME_UPDATE, ({ currentTime }) => {
     if (getToken()) {
       updateVideoPlayTimes(currentTime, file_pk);
     } else {
       updateVideoPlayTimesByCookie(currentTime, file_pk);
     }
+  });
+  player.value.on(Events.ENDED, () => {
+    emit("ended", Number(props.pk));
   });
 };
 
