@@ -121,7 +121,6 @@ interface FilmResultType {
   times?: string;
   views?: string;
   channel?: string;
-  current_play_pk?: string;
   release_date?: string;
   rate?: number;
   channel_info?: category[];
