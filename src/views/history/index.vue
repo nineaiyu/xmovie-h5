@@ -14,7 +14,7 @@ const loading = ref(false);
 const refreshing = ref(false);
 
 const queryParams = reactive({
-  ordering: "-created_time",
+  ordering: "-updated_time",
   name: "",
   page: 1,
   size: 10
