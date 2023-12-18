@@ -4,6 +4,7 @@ import { RouteParamValue, useRoute } from "vue-router";
 import {
   getFilmDetailApi,
   getFilmDownloadApi,
+  getFilmPlayingDataApi,
   getFilmRecommendDataApi
 } from "@/api/movie/film";
 import { showNotify } from "vant";
@@ -31,13 +32,7 @@ const getFilmDetail = (pk: string | RouteParamValue[] | any) => {
       episodeList.value.forEach(item => {
         playPkList.value.push(item.pk);
       });
-      if (getToken()) {
-        currentPk.value = filmDetail.value.current_play_pk;
-      } else {
-        currentPk.value =
-          getHistoryByCookie(filmDetail.value.pk)?.currentPk ??
-          filmDetail.value.current_play_pk;
-      }
+      getFilePlayingData(filmDetail.value.pk);
     }
     actorList.value = [...res.director];
     res.starring.forEach(item => {
@@ -61,7 +56,20 @@ const getFilmRecommendData = (pk: string | RouteParamValue[] | any) => {
   getFilmRecommendDataApi(pk).then(res => {
     if (res.code === 1000) {
       recommendList.value = res.data.results;
-      console.log(res.data);
+    }
+  });
+};
+
+const getFilePlayingData = (pk: string) => {
+  getFilmPlayingDataApi(pk).then(res => {
+    if (res.code === 1000) {
+      console.log(res.current);
+      if (getToken()) {
+        currentPk.value = res.current;
+      } else {
+        currentPk.value =
+          getHistoryByCookie(filmDetail.value.pk)?.currentPk ?? res.current;
+      }
     }
   });
 };
@@ -69,6 +77,14 @@ const getFilmRecommendData = (pk: string | RouteParamValue[] | any) => {
 const initData = () => {
   getFilmDetail(route.params.pk);
   getFilmRecommendData(route.params.pk);
+};
+
+const setCurrentLocation = () => {
+  setTimeout(() => {
+    document
+      .getElementById(currentPk.value.toString())
+      .scrollIntoView({ behavior: "smooth", block: "center" });
+  }, 800);
 };
 
 onMounted(() => {
@@ -168,6 +184,7 @@ const onPlayEnd = (pk: number) => {
           :autoplay="true"
           :init="false"
           @ended="onPlayEnd"
+          @loadeddata="setCurrentLocation"
         />
       </div>
     </van-sticky>
@@ -176,7 +193,11 @@ const onPlayEnd = (pk: number) => {
       <van-tabs class="m-5">
         <van-tab title="播放列表">
           <van-space direction="vertical" fill class="mt-5">
-            <van-swipe-cell v-for="(item, index) in episodeList" :key="item.pk">
+            <van-swipe-cell
+              v-for="(item, index) in episodeList"
+              :id="item.pk"
+              :key="item.pk"
+            >
               <van-button
                 block
                 :type="

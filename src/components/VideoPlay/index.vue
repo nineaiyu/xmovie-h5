@@ -25,6 +25,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 const emit = defineEmits<{
   (e: "ended", v: any): void;
+  (e: "loadeddata", v: any): void;
 }>();
 const player = ref();
 
@@ -77,6 +78,9 @@ const initVideo = (result: object[] | any, times: number, file_pk: number) => {
   });
   player.value.on(Events.ENDED, () => {
     emit("ended", Number(props.pk));
+  });
+  player.value.on(Events.LOADED_DATA, () => {
+    emit("loadeddata", Number(props.pk));
   });
 };
 

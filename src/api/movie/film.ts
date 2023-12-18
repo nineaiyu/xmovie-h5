@@ -11,6 +11,10 @@ export const getFilmRecommendDataApi = (pk: string) => {
   return http.request<Result>("get", `/api/movies/h5/film/${pk}/recommend`);
 };
 
+export const getFilmPlayingDataApi = (pk: string) => {
+  return http.request<DetailResult>("get", `/api/movies/h5/film/${pk}/current`);
+};
+
 export const getFilterApi = (params: object) => {
   return http.request<Result>("get", "/api/movies/h5/filter", {
     params

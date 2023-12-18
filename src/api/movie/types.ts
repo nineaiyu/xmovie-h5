@@ -25,6 +25,7 @@ export type DetailResult = {
     pk?: string;
   }[];
   film?: object;
+  current?: string;
 };
 
 export type VideoPreviewResult = {

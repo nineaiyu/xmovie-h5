@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref } from "vue";
+import { nextTick, onMounted, reactive, ref } from "vue";
 import { getFilmDataApi, getFilterApi } from "@/api/movie/film";
 
 const loading = ref(false);
@@ -41,6 +41,9 @@ const getFilter = () => {
       CategoryResult.value.forEach(item => {
         queryParams[item.key] = "";
       });
+      nextTick(() => {
+        getData();
+      });
     }
   });
 };
@@ -61,9 +64,8 @@ const onLoad = () => {
 };
 
 onMounted(() => {
-  getFilter();
   finished.value = true;
-  getData();
+  getFilter();
 });
 const itemRef = ref(null);
 const onConfirm = () => {
