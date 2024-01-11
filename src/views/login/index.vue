@@ -1,39 +1,37 @@
 <template>
-  <van-space direction="vertical" class="text-center mt-5 w-full" :size="20">
-    <van-image round width="10rem" height="10rem" :src="logo" />
+  <van-space :size="20" class="text-center mt-5 w-full" direction="vertical">
+    <van-image :src="logo" height="10rem" round width="10rem" />
     <h2 @click="useToggleDarkMode">
-      爱看影院<svg-icon
-        class="text-[18px]"
-        :name="useDarkMode() ? 'light' : 'dark'"
-      />
+      爱看影院
+      <svg-icon :name="useDarkMode() ? 'light' : 'dark'" class="text-[18px]" />
     </h2>
     <van-form @submit="handleLogin">
       <van-cell-group inset>
         <van-field
           v-model="loginForm.username"
-          name="用户名"
-          label="用户名"
-          clearable
-          border
-          placeholder="请输入用户名"
           :rules="[{ required: true, message: '请填写用户名' }]"
+          border
+          clearable
+          label="用户名"
+          name="用户名"
+          placeholder="请输入用户名"
         />
         <van-field
           v-model="loginForm.password"
+          :rules="[{ required: true, message: '请填写密码' }]"
           center
           clearable
           label="密码"
           placeholder="请输入密码"
-          :rules="[{ required: true, message: '请填写密码' }]"
         />
         <van-field
           v-if="isLogin"
           v-model="loginForm.captcha_code"
+          :rules="[{ required: true, message: '请填写验证码' }]"
           center
           clearable
           label="验证码"
           placeholder="请输入图片验证码"
-          :rules="[{ required: true, message: '请填写验证码' }]"
         >
           <template #button>
             <ReImageVerify v-model:code="loginForm.captcha_key" />
@@ -50,12 +48,12 @@
         />
       </van-cell-group>
       <div class="m-5">
-        <van-button plain block type="primary" @click="handleLogin">
+        <van-button block plain type="primary" @click="handleLogin">
           {{ title[`${isLogin}`] }}
         </van-button>
       </div>
       <div class="m-5">
-        <van-button plain block type="success" @click="isLogin = !isLogin">
+        <van-button block plain type="success" @click="isLogin = !isLogin">
           {{ title[`${!isLogin}`] }}
         </van-button>
       </div>
@@ -73,6 +71,7 @@ import { getTempTokenApi } from "@/api/system/auth";
 import ReImageVerify from "@/components/ImageVerify/src/index.vue";
 import "vant/es/notify/style";
 import { useDarkMode, useToggleDarkMode } from "@/hooks/useToggleDarkMode";
+
 const loginForm = reactive({
   username: "",
   password: "",

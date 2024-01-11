@@ -178,42 +178,42 @@ const onPlayEnd = (pk: number) => {
       <div class="min-h-[30vh] w-full">
         <video-play
           v-if="currentPk !== '0'"
-          :film="filmDetail.pk.toString()"
-          :pk="currentPk.toString()"
           :autoplay="true"
+          :film="filmDetail.pk.toString()"
           :init="false"
+          :pk="currentPk.toString()"
           @ended="onPlayEnd"
           @loadeddata="setCurrentLocation"
         />
       </div>
     </van-sticky>
-    <van-empty v-else image="network" description="播放列表获取失败" />
+    <van-empty v-else description="播放列表获取失败" image="network" />
     <van-col class="mt-5">
       <van-tabs class="m-5">
         <van-tab title="播放列表">
-          <van-space direction="vertical" fill class="mt-5">
+          <van-space class="mt-5" direction="vertical" fill>
             <van-swipe-cell
               v-for="(item, index) in episodeList"
               :id="item.pk"
               :key="item.pk"
             >
               <van-button
-                block
                 :type="
                   item.pk.toString() === currentPk.toString()
                     ? 'success'
                     : 'default'
                 "
+                block
                 @click="playVideo(item.pk, index)"
               >
                 第{{ index + 1 }}集：{{ item.name }}
               </van-button>
               <template #right>
                 <van-button
+                  plain
                   square
                   text="下载"
                   type="primary"
-                  plain
                   @click="downloadFile(item.pk)"
                 />
               </template>
@@ -224,14 +224,14 @@ const onPlayEnd = (pk: number) => {
               <h3>影视推荐</h3>
             </van-row>
           </van-cell>
-          <van-grid :gutter="10" :column-num="3">
+          <van-grid :column-num="3" :gutter="10">
             <film-card :data="recommendList" />
           </van-grid>
         </van-tab>
-        <van-tab v-if="filmDetail" title="详细内容" class="mt-5">
+        <van-tab v-if="filmDetail" class="mt-5" title="详细内容">
           <van-row>
             <van-col :span="6">
-              <van-image :src="filmDetail.poster" fit="cover" :radius="6" />
+              <van-image :radius="6" :src="filmDetail.poster" fit="cover" />
             </van-col>
             <van-col :span="16" offset="1">
               <van-space direction="vertical" fill>
@@ -246,9 +246,9 @@ const onPlayEnd = (pk: number) => {
                       ...filmDetail.language_info
                     ]"
                     :key="item.value"
-                    plain
-                    class="m-1"
                     :type="getIndexType(index % 3)"
+                    class="m-1"
+                    plain
                     >{{ item.label }}
                   </van-tag>
                 </van-col>
@@ -280,7 +280,7 @@ const onPlayEnd = (pk: number) => {
                 class="text-center inline-block w-1/4 mr-3"
                 @click="goDetail(item.pk)"
               >
-                <van-image :src="item.avatar" fit="cover" :radius="6" />
+                <van-image :radius="6" :src="item.avatar" fit="cover" />
                 <p class="truncate">{{ item.name }}</p>
               </div>
             </div>
@@ -291,10 +291,10 @@ const onPlayEnd = (pk: number) => {
           <van-row>
             <van-col :span="24">
               <van-text-ellipsis
-                rows="10"
                 :content="filmDetail.introduction"
-                expand-text="展开"
                 collapse-text="收起"
+                expand-text="展开"
+                rows="10"
               />
             </van-col>
           </van-row>

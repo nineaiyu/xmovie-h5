@@ -60,11 +60,11 @@ const onLoad = () => {
 };
 </script>
 <template>
-  <van-back-top right="5vw" bottom="10vh" />
+  <van-back-top bottom="10vh" right="5vw" />
   <van-cell>
     <van-row class="text-left">
       <van-col :span="7">
-        <van-image :src="actorDetail?.avatar" fit="cover" :radius="6" />
+        <van-image :radius="6" :src="actorDetail?.avatar" fit="cover" />
       </van-col>
       <van-col :span="14" offset="2">
         <van-row class="font-bold text-1xl">{{ actorDetail?.name }}</van-row>
@@ -79,10 +79,10 @@ const onLoad = () => {
     <van-row class="text-left">
       <van-col :span="24">
         <van-text-ellipsis
-          rows="10"
           :content="actorDetail?.introduction"
-          expand-text="展开"
           collapse-text="收起"
+          expand-text="展开"
+          rows="10"
         />
       </van-col>
     </van-row>
@@ -99,7 +99,7 @@ const onLoad = () => {
     @load="onLoad"
   >
     <van-cell>
-      <van-grid :gutter="10" :column-num="3">
+      <van-grid :column-num="3" :gutter="10">
         <film-card :data="FilmResult" />
       </van-grid>
     </van-cell>

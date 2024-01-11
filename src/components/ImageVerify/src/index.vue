@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { watch } from "vue";
 import { useImageVerify } from "./hooks";
 
@@ -33,9 +33,9 @@ defineExpose({ getImgCode });
 
 <template>
   <van-image
-    style="width: 120px; height: 40px"
-    class="cursor-pointer"
     :src="imgUrl"
+    class="cursor-pointer"
+    style="width: 120px; height: 40px"
     @click="getImgCode"
   />
 </template>

@@ -1,12 +1,13 @@
 # xmovie
+
 h5移动端视频播放
 
 后端服务基于 [xadmin-server](https://github.com/nineaiyu/xadmin-server/tree/movies) 开发
 
 后台服务基于 [xadmin-client](https://github.com/nineaiyu/xadmin-client/tree/movies) 开发
 
-
 ### 在线预览
+
 手机端打开 [https://xmovie.dvcloud.xin/](https://xmovie.dvcloud.xin/)
 
 ## docker 构建
@@ -24,6 +25,7 @@ docker compose up xmovie-h5-prod
 ```
 
 ### 或直接通过脚本构建
+
 ```shell
 sh build.sh
 ```

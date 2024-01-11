@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import tabbar from "@/components/Tabbar/index.vue";
 import NavBar from "@/components/NavBar/index.vue";
 import { useCachedViewStoreHook } from "@/store/modules/cachedView";

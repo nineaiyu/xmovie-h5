@@ -17,8 +17,8 @@
   </van-tabbar>
 </template>
 
-<script setup lang="ts">
-import { ref, reactive } from "vue";
+<script lang="ts" setup>
+import { reactive, ref } from "vue";
 
 const active = ref(0);
 const tabbarData = reactive([

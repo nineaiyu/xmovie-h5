@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { onMounted, ref } from "vue";
 import { getHomeDataApi } from "@/api/movie/home";
 import router from "@/router";
@@ -29,11 +29,11 @@ const goPath = (path: string) => {
 </script>
 
 <template>
-  <van-back-top right="5vw" bottom="10vh" />
+  <van-back-top bottom="10vh" right="5vw" />
   <van-pull-refresh v-model="loading" @refresh="getData">
     <van-swipe
-      class="ml-4 mr-4 mt-2"
       :autoplay="3000"
+      class="ml-4 mr-4 mt-2"
       indicator-color="white"
       lazy-render
     >
@@ -45,14 +45,14 @@ const goPath = (path: string) => {
         <van-image :src="item.picture" radius="6" />
       </van-swipe-item>
     </van-swipe>
-
+    <van-loading v-if="loading" />
     <van-cell-group
       v-for="result in FilmResult"
       :key="result.title"
       :title="result.title"
     >
       <van-cell>
-        <van-grid :gutter="10" :column-num="3">
+        <van-grid :column-num="3" :gutter="10">
           <film-card :data="result.data" />
         </van-grid>
       </van-cell>

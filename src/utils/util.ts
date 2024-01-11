@@ -59,6 +59,7 @@ export function getHistoryByCookie(film: string) {
   }
   return {};
 }
+
 export function setHistoryByCookie(
   film: string,
   currentPk: string,

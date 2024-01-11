@@ -1,10 +1,11 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { nextTick, onMounted, reactive, ref } from "vue";
 import { getFilmDataApi, getFilterApi } from "@/api/movie/film";
 
 const loading = ref(false);
 const refreshing = ref(false);
-
+const finished = ref(false);
+const refreshDisable = ref(false);
 const queryParams = reactive({
   ordering: "-created_time",
   name: "",
@@ -17,6 +18,10 @@ const FilmResult = ref([]);
 const getData = () => {
   getFilmDataApi(queryParams).then(({ code, data }) => {
     if (code === 1000) {
+      if (refreshing.value) {
+        FilmResult.value = [];
+        refreshing.value = false;
+      }
       FilmResult.value = [...FilmResult.value, ...data.results];
       finished.value = data.total === FilmResult.value.length;
     }
@@ -48,15 +53,11 @@ const getFilter = () => {
   });
 };
 
-const finished = ref(false);
-const refreshDisable = ref(false);
 const onLoad = () => {
   // 异步更新数据
   if (refreshing.value) {
     queryParams.name = "";
     queryParams.page = 1;
-    FilmResult.value = [];
-    refreshing.value = false;
   } else {
     queryParams.page += 1;
   }
@@ -64,7 +65,7 @@ const onLoad = () => {
 };
 
 onMounted(() => {
-  finished.value = true;
+  loading.value = true;
   getFilter();
 });
 const itemRef = ref(null);
@@ -75,7 +76,7 @@ const onConfirm = () => {
   itemRef.value.toggle(false);
 };
 
-const refreshData = () => {
+const onRefresh = () => {
   finished.value = false;
   loading.value = true;
   onLoad();
@@ -83,43 +84,43 @@ const refreshData = () => {
 </script>
 
 <template>
-  <van-back-top right="5vw" bottom="10vh" />
+  <van-back-top bottom="10vh" right="5vw" />
   <van-pull-refresh
     v-model="refreshing"
     :disabled="refreshDisable"
-    @refresh="refreshData"
+    @refresh="onRefresh"
   >
     <van-sticky>
       <van-dropdown-menu ref="menuRef">
         <van-dropdown-item
           ref="itemRef"
           title="筛选"
-          @opened="refreshDisable = true"
           @closed="refreshDisable = false"
+          @opened="refreshDisable = true"
         >
           <van-tabs
             v-for="category in CategoryResult"
             :key="category.key"
             v-model:active="queryParams[category.key]"
-            type="line"
             swipeable
+            type="line"
           >
             <van-tab
               v-for="item in category.result"
               :key="item.value"
-              :title="item.label"
               :name="item.value"
+              :title="item.label"
             />
           </van-tabs>
           <div>
-            <van-button block @click="onConfirm"> 确认 </van-button>
+            <van-button block @click="onConfirm"> 确认</van-button>
           </div>
         </van-dropdown-item>
         <van-dropdown-item
           v-model="queryParams.name"
           title="搜索"
-          @opened="refreshDisable = true"
           @closed="refreshDisable = false"
+          @opened="refreshDisable = true"
         >
           <van-search
             v-model="queryParams.name"
@@ -136,7 +137,7 @@ const refreshData = () => {
       @load="onLoad"
     >
       <van-cell>
-        <van-grid :gutter="10" :column-num="3">
+        <van-grid :column-num="3" :gutter="10">
           <film-card :data="FilmResult" />
         </van-grid>
       </van-cell>

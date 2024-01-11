@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { showNotify } from "vant";
 import { useUserStore } from "@/store/modules/user";
 import { onMounted, reactive, ref } from "vue";
@@ -74,25 +74,25 @@ const password = reactive({
 <template>
   <van-dialog
     v-model:show="showPassword"
-    title="更新密码"
     show-cancel-button
+    title="更新密码"
     @confirm="resetPassword"
   >
     <van-form>
       <van-cell-group inset>
         <van-field
           v-model="password.old_password"
-          type="password"
+          autocomplete="old-password"
           label="旧密码"
           name="old"
-          autocomplete="old-password"
+          type="password"
         />
         <van-field
           v-model="password.sure_password"
-          type="password"
+          autocomplete="sure-password"
           label="新密码"
           name="sure"
-          autocomplete="sure-password"
+          type="password"
         />
       </van-cell-group>
     </van-form>
@@ -100,12 +100,12 @@ const password = reactive({
   <van-action-sheet v-model:show="showAvatar" title="更新头像">
     <van-cell>
       <van-row>
-        <van-col :span="8" :offset="8">
+        <van-col :offset="8" :span="8">
           <file-upload
             v-if="showAvatar"
-            :max-size="5"
-            :max-count="1"
             :is-cutting="true"
+            :max-count="1"
+            :max-size="5"
             accept="image/*"
             @upload="afterRead"
           />
@@ -117,9 +117,9 @@ const password = reactive({
     <van-cell>
       <van-row v-if="userinfo" class="text-left">
         <van-col :span="7">
-          <van-image :src="userinfo.avatar" fit="cover" :radius="6" />
+          <van-image :radius="6" :src="userinfo.avatar" fit="cover" />
         </van-col>
-        <van-col :span="16" :offset="1">
+        <van-col :offset="1" :span="16">
           <div class="font-bold">{{ userinfo.username }}</div>
           <div class="font-light">{{ userinfo.nickname }}</div>
           <div class="font-light">邮箱 {{ userinfo.email }}</div>
@@ -129,27 +129,27 @@ const password = reactive({
         </van-col>
       </van-row>
     </van-cell>
-    <van-cell title="主题模式" class="mt-2" size="large">
+    <van-cell class="mt-2" size="large" title="主题模式">
       <svg-icon
-        class="text-[18px]"
         :name="useDarkMode() ? 'light' : 'dark'"
+        class="text-[18px]"
         @click="onClickRight"
       />
     </van-cell>
     <van-cell
-      title="修改头像"
-      class="mt-2"
-      size="large"
-      is-link
       arrow-direction="down"
+      class="mt-2"
+      is-link
+      size="large"
+      title="修改头像"
       @click="showAvatar = true"
     />
     <van-cell
-      title="修改密码"
-      class="mt-2"
-      size="large"
-      is-link
       arrow-direction="down"
+      class="mt-2"
+      is-link
+      size="large"
+      title="修改密码"
       @click="showPassword = true"
     />
 

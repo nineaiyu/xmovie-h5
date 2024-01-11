@@ -2,18 +2,18 @@ import { defineStore } from "pinia";
 import { store } from "@/store";
 import {
   loginApi,
-  registerApi,
-  refreshTokenApi,
   logoutApi,
+  refreshTokenApi,
+  registerApi,
   type TokenResult,
   type UserInfoResult
 } from "@/api/system/auth";
 import {
-  setToken,
-  removeToken,
   getRefreshToken,
-  setUserInfo,
-  getUserInfo
+  getUserInfo,
+  removeToken,
+  setToken,
+  setUserInfo
 } from "@/utils/auth";
 import { getUserInfoApi } from "@/api/system/userinfo";
 import { showNotify } from "vant";

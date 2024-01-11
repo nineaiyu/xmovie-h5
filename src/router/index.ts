@@ -20,6 +20,7 @@ export interface toRouteType extends RouteLocationNormalized {
     noCache?: boolean;
   };
 }
+
 /** 路由白名单 */
 const whiteList = ["/login", "/home", "/film", "/detail"];
 

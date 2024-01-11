@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { isExternal } from "@/utils/validate";
 import { computed } from "vue";
 
@@ -6,6 +6,7 @@ interface Props {
   name: string;
   className?: string;
 }
+
 const props = withDefaults(defineProps<Props>(), {
   name: "",
   className: ""

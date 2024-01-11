@@ -40,16 +40,16 @@ const goDetail = (pk: string) => {
   >
     <van-col>
       <van-badge
-        position="bottom-right"
-        color="rgba(101 ,38, 220,0)"
         :offset="['-5vw', '-6vw']"
+        color="rgba(101 ,38, 220,0)"
+        position="bottom-right"
       >
         <van-badge
-          position="top-left"
-          color="rgba(101 ,38, 220,0)"
           :offset="['5vw', '3vw']"
+          color="rgba(101 ,38, 220,0)"
+          position="top-left"
         >
-          <van-image :src="item.poster" fit="cover" :radius="6" />
+          <van-image :radius="6" :src="item.poster" fit="cover" />
           <template #content>
             <span style="font-size: 4vw; color: #029bb7">{{
               dayjs(item.release_date).format("YYYY")
@@ -62,12 +62,12 @@ const goDetail = (pk: string) => {
       </van-badge>
     </van-col>
     <div class="w-full text-center">
-      <van-text-ellipsis class="font-bold" :content="item.name" />
+      <van-text-ellipsis :content="item.name" class="font-bold" />
     </div>
     <div class="w-full text-center">
       <van-text-ellipsis
-        class="font-light"
         :content="`${item?.channel_info[0]?.label} | ${item?.category_info[0]?.label}`"
+        class="font-light"
       />
     </div>
   </van-grid-item>

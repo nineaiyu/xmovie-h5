@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { onMounted, onUnmounted, ref } from "vue";
 import Player, { Events } from "xgplayer";
 import HlsJsPlugin from "xgplayer-hls.js";
@@ -135,7 +135,7 @@ onUnmounted(() => {
 
 <template>
   <div>
-    <meta name="referrer" content="no-referrer" />
+    <meta content="no-referrer" name="referrer" />
     <div id="mse" />
   </div>
 </template>

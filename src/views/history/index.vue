@@ -1,5 +1,5 @@
-<script setup lang="ts">
-import { onMounted, reactive, ref } from "vue";
+<script lang="ts" setup>
+import { reactive, ref } from "vue";
 import {
   cleanWatchHistoryApi,
   deleteWatchHistoryApi,
@@ -8,15 +8,17 @@ import {
 import { formatVideoTimes } from "@/utils/util";
 import dayjs from "dayjs";
 import router from "@/router";
-import { showNotify, showConfirmDialog } from "vant";
+import { showConfirmDialog, showNotify } from "vant";
 
 const loading = ref(false);
 const refreshing = ref(false);
+const finished = ref(false);
+const total = ref(0);
 
 const queryParams = reactive({
   ordering: "-updated_time",
   name: "",
-  page: 1,
+  page: 0,
   size: 10
 });
 
@@ -40,6 +42,10 @@ const Result = ref<historyDetail[]>([]);
 const getData = () => {
   getWatchHistoryListApi(queryParams).then(({ code, data }) => {
     if (code === 1000) {
+      if (refreshing.value) {
+        Result.value = [];
+        refreshing.value = false;
+      }
       Result.value = [...Result.value, ...data.results];
       total.value = data.total;
       finished.value = data.total === Result.value.length;
@@ -47,27 +53,18 @@ const getData = () => {
     loading.value = false;
   });
 };
-const total = ref(0);
-const finished = ref(false);
-const refreshDisable = ref(false);
 const onLoad = () => {
   // 异步更新数据
   if (refreshing.value) {
     queryParams.name = "";
     queryParams.page = 1;
-    Result.value = [];
-    refreshing.value = false;
   } else {
     queryParams.page += 1;
   }
   getData();
 };
 
-onMounted(() => {
-  finished.value = true;
-  getData();
-});
-const refreshData = () => {
+const onRefresh = () => {
   finished.value = false;
   loading.value = true;
   onLoad();
@@ -120,13 +117,13 @@ const confirmDelete = (pk: string) => {
 </script>
 
 <template>
-  <van-back-top right="5vw" bottom="10vh" />
+  <van-back-top bottom="10vh" right="5vw" />
   <van-sticky>
     <van-cell>
       <van-search
         v-model="queryParams.name"
-        show-action
         placeholder="请输入搜索关键词"
+        show-action
         @search="onSearch"
       >
         <template #action>
@@ -135,11 +132,7 @@ const confirmDelete = (pk: string) => {
       </van-search>
     </van-cell>
   </van-sticky>
-  <van-pull-refresh
-    v-model="refreshing"
-    :disabled="refreshDisable"
-    @refresh="refreshData"
-  >
+  <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
     <van-list
       v-model:loading="loading"
       :finished="finished"
@@ -147,26 +140,26 @@ const confirmDelete = (pk: string) => {
       @load="onLoad"
     >
       <van-cell>
-        <van-grid :gutter="10" :column-num="1">
+        <van-grid :column-num="1" :gutter="10">
           <van-swipe-cell v-for="(item, index) in Result" :key="item.pk">
             <template #right>
               <van-space direction="vertical" fill>
                 <van-button
-                  type="danger"
-                  plain
                   block
+                  plain
+                  type="danger"
                   @click="confirmDelete(item.pk)"
-                  >删除</van-button
-                >
-                <van-button type="primary" block @click="goDetail(item.film.pk)"
-                  >观看</van-button
-                >
+                  >删除
+                </van-button>
+                <van-button block type="primary" @click="goDetail(item.film.pk)"
+                  >观看
+                </van-button>
               </van-space>
             </template>
             <van-grid-item>
               <van-row class="text-left">
                 <van-col :span="6" @click="goDetail(item.film.pk)">
-                  <van-image :src="item.film.poster" fit="cover" :radius="6" />
+                  <van-image :radius="6" :src="item.film.poster" fit="cover" />
                 </van-col>
                 <van-col :span="16" offset="1">
                   <span class="font-bold">{{ item.film.name }}</span>
@@ -188,14 +181,14 @@ const confirmDelete = (pk: string) => {
                 </van-col>
                 <van-col :span="20" class="w-full mt-3">
                   <van-progress
-                    class="w-full"
                     :percentage="
                       Math.floor((item.times * 100) / item.episode.times)
                     "
+                    class="w-full"
                     stroke-width="6"
                   />
                 </van-col>
-                <van-col :span="3" :offset="1" class="w-full">
+                <van-col :offset="1" :span="3" class="w-full">
                   {{ index + 1 }}/{{ total }}
                 </van-col>
               </van-row>

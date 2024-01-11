@@ -1,7 +1,7 @@
 <template>
   <div class="upload">
     <van-overlay :show="show" :z-index="9999">
-      <img ref="imgElRef" src="" alt="" />
+      <img ref="imgElRef" alt="" src="" />
       <van-tabbar>
         <van-tabbar-item name="rotate" @click="handCropper('rotate', 90)"
           >旋转
@@ -12,21 +12,21 @@
       </van-tabbar>
     </van-overlay>
     <van-field
+      :label="props.label"
       :name="props.name"
       :required="props.required"
       :rules="props.rules"
-      :label="props.label"
     >
       <template #input>
         <van-uploader
           ref="uploader"
           v-model="fileList"
+          :accept="props.accept"
           :after-read="afterRead"
           :max-count="props.maxCount"
           :max-size="fileMaxSize"
-          :accept="props.accept"
-          @click-preview="afterRead"
           @oversize="onOversize"
+          @click-preview="afterRead"
         />
       </template>
     </van-field>
