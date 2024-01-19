@@ -4,12 +4,16 @@ import { getActorDetailApi } from "@/api/movie/actor";
 import { getFilmDataApi } from "@/api/movie/film";
 
 interface ActorResultType {
-  avatar: string;
-  birthday: string;
-  name: string;
-  foreign_name: string;
-  introduction: string;
-  sex: number;
+  pk: number;
+  who: string;
+  actor: {
+    avatar: string;
+    birthday: string;
+    name: string;
+    foreign_name: string;
+    introduction: string;
+    sex: number;
+  };
 }
 
 interface Props {
@@ -64,13 +68,20 @@ const onLoad = () => {
   <van-cell>
     <van-row class="text-left">
       <van-col :span="7">
-        <van-image :radius="6" :src="actorDetail?.avatar" fit="cover" />
+        <van-image :radius="6" :src="actorDetail?.actor?.avatar" fit="cover" />
       </van-col>
       <van-col :span="14" offset="2">
-        <van-row class="font-bold text-1xl">{{ actorDetail?.name }}</van-row>
-        <van-row class="font-light">{{ actorDetail?.foreign_name }}</van-row>
-        <van-row>生日：{{ actorDetail?.birthday }}</van-row>
-        <van-row>性别：{{ actorDetail?.sex === 1 ? "女" : "男" }}</van-row>
+        <van-row class="font-bold text-1xl">{{
+          actorDetail?.actor?.name
+        }}</van-row>
+        <van-row class="font-light">{{
+          actorDetail?.actor?.foreign_name
+        }}</van-row>
+        <van-row>生日：{{ actorDetail?.actor?.birthday }}</van-row>
+        <van-row
+          >性别：{{ actorDetail?.actor?.sex === 1 ? "女" : "男" }}</van-row
+        >
+        <van-row>饰演：{{ actorDetail?.who }}</van-row>
       </van-col>
     </van-row>
     <van-row>
@@ -79,7 +90,7 @@ const onLoad = () => {
     <van-row class="text-left">
       <van-col :span="24">
         <van-text-ellipsis
-          :content="actorDetail?.introduction"
+          :content="actorDetail?.actor?.introduction"
           collapse-text="收起"
           expand-text="展开"
           rows="10"

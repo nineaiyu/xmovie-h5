@@ -16,14 +16,22 @@ export type Result = {
   };
 };
 
+export interface ActorResultType {
+  pk: string;
+  who: string;
+  avatar: string;
+  birthday: string;
+  name: string;
+  foreign_name: string;
+  introduction: string;
+  sex: number;
+}
+
 export type DetailResult = {
   detail?: string;
   code?: number;
   episode?: Array<any>;
-  starring?: Array<any>;
-  director?: {
-    pk?: string;
-  }[];
+  starring?: Array<ActorResultType>;
   film?: object;
   current?: string;
 };

@@ -11,13 +11,14 @@ import { showNotify } from "vant";
 import "vant/es/notify/style";
 import { downloadFileByUrl, getHistoryByCookie } from "@/utils/util";
 import { getToken } from "@/utils/auth";
+import { ActorResultType } from "@/api/movie/types";
 
 const route = useRoute();
 const filmDetail = ref<FilmResultType>();
 const episodeList = ref([]);
 const playPkList = ref([]);
 const recommendList = ref([]);
-const actorList = ref([]);
+const actorList = ref<ActorResultType[]>([]);
 const currentPk = ref("0");
 const currentIndex = ref(0);
 const showActorDetail = reactive({
@@ -34,22 +35,8 @@ const getFilmDetail = (pk: string | RouteParamValue[] | any) => {
       });
       getFilePlayingData(filmDetail.value.pk);
     }
-    actorList.value = [...res.director];
-    res.starring.forEach(item => {
-      if (!checkExist(item, res.director)) {
-        actorList.value.push(item);
-      }
-    });
+    actorList.value = [...res.starring];
   });
-};
-
-const checkExist = (val, list) => {
-  for (let i = 0; i < list.length; i++) {
-    if (val.pk === list[i].pk) {
-      return true;
-    }
-  }
-  return false;
 };
 
 const getFilmRecommendData = (pk: string | RouteParamValue[] | any) => {
@@ -116,7 +103,6 @@ interface FilmResultType {
   region?: string;
   language?: string;
   subtitle?: string;
-  director?: string[];
   starring?: string[];
   times?: string;
   views?: string;
@@ -150,6 +136,7 @@ const playVideo = (pk: string, index: number) => {
 };
 
 const goDetail = (pk: string) => {
+  openSheet.value = true;
   showActorDetail.show = true;
   showActorDetail.pk = pk;
 };
@@ -169,6 +156,14 @@ const onPlayEnd = (pk: number) => {
   if (index > -1 && index < playPkList.value.length) {
     playVideo(playPkList.value[index + 1], index);
   }
+};
+const openSheet = ref(true);
+const closeSheet = () => {
+  setTimeout(() => {
+    openSheet.value = false;
+    console.log(openSheet.value, 111);
+  }, 500);
+  return true;
 };
 </script>
 
@@ -268,9 +263,14 @@ const onPlayEnd = (pk: number) => {
           </van-row>
           <van-action-sheet
             v-model:show="showActorDetail.show"
+            :before-close="closeSheet"
             title="演员信息"
+            @cancel="closeSheet"
           >
-            <actor-detail :pk="showActorDetail.pk.toString()" />
+            <actor-detail
+              v-if="openSheet"
+              :pk="showActorDetail.pk.toString()"
+            />
           </van-action-sheet>
           <van-row>
             <div class="overflow-hidden whitespace-nowrap overflow-x-auto">
@@ -282,6 +282,7 @@ const onPlayEnd = (pk: number) => {
               >
                 <van-image :radius="6" :src="item.avatar" fit="cover" />
                 <p class="truncate">{{ item.name }}</p>
+                <p class="truncate font-thin">{{ item.who }}</p>
               </div>
             </div>
           </van-row>
