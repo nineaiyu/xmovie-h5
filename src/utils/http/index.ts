@@ -175,9 +175,16 @@ class PureHttp {
         const whiteProgressList = [
           "/api/movies/h5/history/times",
           "/api/movies/h5/film",
-          "/api/movies/h5/history"
+          "/api/movies/h5/history",
+          "/api/movies/h5/actor/\\d+$"
         ];
-        if (whiteProgressList.indexOf(config.url) === -1) {
+        let flag = false;
+        whiteProgressList.forEach(item => {
+          if (new RegExp(item).test(config.url)) {
+            flag = true;
+          }
+        });
+        if (!flag) {
           // 开启进度条动画
           NProgress.start();
         }
