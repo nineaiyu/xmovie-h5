@@ -7,6 +7,7 @@ interface ActorResultType {
   pk: number;
   who: string;
   actor: {
+    pk: string;
     avatar: string;
     birthday: string;
     name: string;
@@ -30,6 +31,8 @@ const getActorDetail = (pk: string) => {
   getActorDetailApi(pk).then(res => {
     if (res.code === 1000 && res.data.results.length === 1) {
       actorDetail.value = res.data.results[0];
+      queryParams.actor = actorDetail.value.actor.pk;
+      getData();
     }
   });
 };
@@ -55,7 +58,6 @@ const getData = () => {
 onMounted(() => {
   getActorDetail(props.pk);
   finished.value = true;
-  getData();
 });
 
 const onLoad = () => {
