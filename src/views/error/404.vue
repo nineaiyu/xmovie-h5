@@ -1,4 +1,8 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+defineOptions({
+  name: "Err404"
+});
+</script>
 
 <template>
   <div class="flex justify-center items-center h-[60vh]">

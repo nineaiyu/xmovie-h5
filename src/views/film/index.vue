@@ -2,6 +2,9 @@
 import { nextTick, onMounted, reactive, ref } from "vue";
 import { getFilmDataApi, getFilterApi } from "@/api/movie/film";
 
+defineOptions({
+  name: "Film"
+});
 const loading = ref(false);
 const refreshing = ref(false);
 const finished = ref(false);

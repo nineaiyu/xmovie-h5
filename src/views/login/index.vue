@@ -72,6 +72,9 @@ import ReImageVerify from "@/components/ImageVerify/src/index.vue";
 import "vant/es/notify/style";
 import { useDarkMode, useToggleDarkMode } from "@/hooks/useToggleDarkMode";
 
+defineOptions({
+  name: "Login"
+});
 const loginForm = reactive({
   username: "",
   password: "",

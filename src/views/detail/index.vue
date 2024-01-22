@@ -13,6 +13,9 @@ import { downloadFileByUrl, getHistoryByCookie } from "@/utils/util";
 import { getToken } from "@/utils/auth";
 import { ActorResultType } from "@/api/movie/types";
 
+defineOptions({
+  name: "Detail"
+});
 const route = useRoute();
 const filmDetail = ref<FilmResultType>();
 const episodeList = ref([]);

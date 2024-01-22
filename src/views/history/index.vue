@@ -10,6 +10,9 @@ import dayjs from "dayjs";
 import router from "@/router";
 import { showConfirmDialog, showNotify } from "vant";
 
+defineOptions({
+  name: "History"
+});
 const loading = ref(false);
 const refreshing = ref(false);
 const finished = ref(false);

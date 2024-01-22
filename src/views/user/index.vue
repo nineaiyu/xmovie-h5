@@ -10,6 +10,9 @@ import {
 } from "@/api/system/userinfo";
 import "vant/es/notify/style";
 
+defineOptions({
+  name: "User"
+});
 interface UserInfo {
   username: string;
   avatar: string;

@@ -3,6 +3,9 @@ import { onMounted, ref } from "vue";
 import { getHomeDataApi } from "@/api/movie/home";
 import router from "@/router";
 
+defineOptions({
+  name: "Home"
+});
 const loading = ref(false);
 const swipeResult = ref();
 const FilmResult = ref();
