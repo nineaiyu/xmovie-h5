@@ -164,7 +164,6 @@ const openSheet = ref(true);
 const closeSheet = () => {
   setTimeout(() => {
     openSheet.value = false;
-    console.log(openSheet.value, 111);
   }, 500);
   return true;
 };

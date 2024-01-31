@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { onMounted, onUnmounted, ref } from "vue";
 import Player, { Events } from "xgplayer";
-import HlsJsPlugin from "xgplayer-hls.js";
+import HlsPlugin from "xgplayer-hls";
 import "vant/es/notify/style";
 import "xgplayer/dist/index.min.css";
 import { getFilmPreviewApi, getFilmPreviewJsonApi } from "@/api/movie/film";
@@ -45,7 +45,7 @@ const initVideo = (result: object[] | any, times: number, file_pk: number) => {
     videoInit: props.init,
     playsinline: true, // 是否启用内联播放模式，该配置项只在移动端生效
     startTime: times ?? 0,
-    plugins: [HlsJsPlugin],
+    plugins: [HlsPlugin],
     fluid: true, // 是否启用流式布局，启用流式布局时根据width、height计算播放器宽高比
     //传入倍速可选数组
     playbackRate: [0.5, 0.75, 1, 1.5, 2],
