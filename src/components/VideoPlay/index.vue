@@ -31,7 +31,10 @@ const player = ref();
 
 const initVideo = (result: object[] | any, times: number, file_pk: number) => {
   if (!getToken()) {
-    times = getHistoryByCookie(props.film)?.times ?? times;
+    const data = getHistoryByCookie(props.film);
+    if (data && data?.currentPk === props.pk) {
+      times = getHistoryByCookie(props.film)?.times ?? times;
+    }
   }
   // https://h5player.bytedance.com/
   player.value = new Player({
